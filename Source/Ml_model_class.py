@@ -1,11 +1,16 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import cross_validate, train_test_split
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import classification_report
+from sklearn.metrics import mean_squared_error
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LogisticRegression
-
+from sklearn.neighbors import KNeighborsClassifier
 
 class ML_model():
     
@@ -28,7 +33,6 @@ class ML_model():
         self.y_train = None
         self.y_test = None
         
-
     def load_data(self):
        
         """
@@ -47,11 +51,15 @@ class ML_model():
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary solution
+            temporary solution is that last column in data set is always y-variable
             """
-            X = np.array(data[["sepal_length", "sepal_width", "petal_length",
-            "petal_width"]])
+            col_names = data.columns
+            dim = len(col_names)
+            X_columns = col_names[:dim-1]
+            y_column = col_names[-1]
             
-            y = np.array(data[["species"]]).ravel()
+            X = np.array(data[X_columns])
+            y = np.array(data[y_column]).ravel()
 
             return(X, y)
 
@@ -72,7 +80,6 @@ class ML_model():
         """
         Method to select accurate model for regression or calssification problem based 
         off accuracy and cross validation.
-
         Regression models: Random Forest and Linear Regression
         Clasfication models: KNN, Random Forest, Logistic Regression
         """
@@ -80,11 +87,11 @@ class ML_model():
         def primary_model_evaluation(model, Y_true, Y_predicted):
             """method to basic evaluation of possible models"""
 
-            accuracy = accuracy_score(Y_true, Y_predicted)
             cross_validate_score = cross_validate(model, self.X_train, 
             self.y_train, cv=5)
 
             if self.model_type == "classification":
+                accuracy = accuracy_score(Y_true, Y_predicted)
                 matrix_report = classification_report(Y_true, Y_predicted)
 
                 model_evaluation_metrics = {
@@ -93,15 +100,22 @@ class ML_model():
                     "accuracy": accuracy
                     }
 
+                print("Model for classification problems, evaluation: {}"
+                .format(model_evaluation_metrics))
+
             elif self.model_type == "regression":
-                
+                mae = mean_absolute_error(Y_true, Y_predicted)
+                mse = mean_squared_error(Y_true, Y_predicted)
                 model_evaluation_metrics = {
                     "cross validate score": cross_validate_score,
-                    "accuracy": accuracy
+                    "MAE": mae,
+                    "MSE": mse
                     }
 
-            print(model_evaluation_metrics)
+                print("Model for regression problems, evaluation: {}"
+                .format(model_evaluation_metrics))
 
+        #classification models bellow
         def rf_classification():
             """Random Rorest Classifier"""
             self.rfc = RandomForestClassifier(n_estimators=100, random_state=101)
@@ -122,19 +136,39 @@ class ML_model():
                     predicted = self.knn.predict(self.X_test)
                     dict_of_results.update({k: predicted})
             
+            best_k = max(dict_of_results, key=dict_of_results.get)
+            predicted = dict_of_results.get(best_k)
+            
             return(predicted)
         
         def lr_classification():
             """Logistic Regression Classifier
             #type of solver is just temporary, to consider more flexible options#
             """
-
-            self.lr = LogisticRegression(random_state=101, solver='newton-cg', multi_class='auto')
+            self.lr = LogisticRegression(random_state=101, solver="newton-cg", multi_class='auto')
             self.lr.fit(self.X_train, self.y_train)
             predicted = self.lr.predict(self.X_test)
             
             return(predicted)
 
+        #regression models bellow
+
+        def linear_regression():
+            """
+            Linear regression model for regression problems
+            """
+            self.lreg = LinearRegression()
+            self.lreg.fit(self.X_train, self.y_train)
+            predicted = self.lreg.predict(self.X_test)
+
+            return(predicted)
+
+        def random_forest_regression():
+            self.rfr = RandomForestRegressor(random_state=101, n_estimators=100)
+            self.rfr.fit(self.X_train, self.y_train)
+            predicted = self.rfr.predict(self.X_test)
+
+            return(predicted)
 
         if self.model_type == "classification":
             predicted = rf_classification()
@@ -147,5 +181,8 @@ class ML_model():
             primary_model_evaluation(self.lr, self.y_test, predicted)
         
         elif self.model_type == "regression" :
-            pass
+            predicted = linear_regression()
+            primary_model_evaluation(self.lreg, self.y_test, predicted)
 
+            predicted = random_forest_regression()
+            primary_model_evaluation(self.rfr, self.y_test, predicted)
