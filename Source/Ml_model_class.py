@@ -75,6 +75,8 @@ class ML_model():
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
+        
+        return(self.X_train, self.y_test)
 
     def model_selection(self):
         """
@@ -87,8 +89,8 @@ class ML_model():
         def primary_model_evaluation(model, Y_true, Y_predicted):
             """method to basic evaluation of possible models"""
 
-            cross_validate_score = cross_validate(model, self.X_train, 
-            self.y_train, cv=5)
+            cross_validate_score = np.mean(cross_validate(model, self.X_train, 
+            self.y_train, cv=5)["test_score"])
 
             if self.model_type == "classification":
                 accuracy = accuracy_score(Y_true, Y_predicted)
@@ -114,6 +116,8 @@ class ML_model():
 
                 print("Model for regression problems, evaluation: {}"
                 .format(model_evaluation_metrics))
+                
+                return model_evaluation_metrics
 
         #classification models bellow
         def rf_classification():
@@ -131,14 +135,17 @@ class ML_model():
             for k in range(1, 20):
                 
                 if k % 2 != 0:
-                    self.knn = KNeighborsClassifier(n_neighbors=k)
-                    self.knn.fit(self.X_train, self.y_train)
-                    predicted = self.knn.predict(self.X_test)
-                    dict_of_results.update({k: predicted})
+                    knn = KNeighborsClassifier(n_neighbors=k)
+                    knn.fit(self.X_train, self.y_train)
+                    predicted = knn.predict(self.X_test)
+                    accuracy = accuracy_score(self.y_test, predicted)
+                    dict_of_results.update({k: accuracy})
             
-            best_k = max(dict_of_results, key=dict_of_results.get)
-            predicted = dict_of_results.get(best_k)
-            
+            self.best_k = max(dict_of_results, key=dict_of_results.get)
+            self.knn = KNeighborsClassifier(n_neighbors=self.best_k)
+            self.knn.fit(self.X_train, self.y_train)
+            predicted = self.knn.predict(self.X_test)
+
             return(predicted)
         
         def lr_classification():
