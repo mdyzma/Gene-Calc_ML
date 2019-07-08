@@ -117,7 +117,7 @@ class ML_model():
                 print("Model for regression problems, evaluation: {}"
                 .format(model_evaluation_metrics))
                 
-                return model_evaluation_metrics
+            return model_evaluation_metrics
 
         #classification models bellow
         def rf_classification():
@@ -178,18 +178,21 @@ class ML_model():
             return(predicted)
 
         if self.model_type == "classification":
-            predicted = rf_classification()
-            primary_model_evaluation(self.rfc, self.y_test, predicted)
-            
-            predicted = knn_classification()
-            primary_model_evaluation(self.knn, self.y_test, predicted)
+            predicted_rf = rf_classification()
+            rf_model_evaluation_metrics = primary_model_evaluation(self.rfc, self.y_test, predicted_rf)
 
-            predicted = lr_classification()
-            primary_model_evaluation(self.lr, self.y_test, predicted)
+            predicted_knn = knn_classification()
+            knn_model_evaluation_metrics = primary_model_evaluation(self.knn, self.y_test, predicted_knn)
+
+            predicted_lr = lr_classification()
+            lr_model_evaluation_metrics = primary_model_evaluation(self.lr, self.y_test, predicted_lr)
+
+            return(rf_model_evaluation_metrics.get("cross validate score"), knn_model_evaluation_metrics.get("cross validate score"), lr_model_evaluation_metrics.get("cross validate score"))
         
-        elif self.model_type == "regression" :
-            predicted = linear_regression()
-            primary_model_evaluation(self.lreg, self.y_test, predicted)
+        elif self.model_type == "regression":
+            predicted_linear = linear_regression()
+            llinear_model_evaluation_metrics = primary_model_evaluation(self.lreg, self.y_test, predicted_linear)
 
-            predicted = random_forest_regression()
-            primary_model_evaluation(self.rfr, self.y_test, predicted)
+            predicted_rf = random_forest_regression()
+            rf_model_evaluation_metrics = primary_model_evaluation(self.rfr, self.y_test, predicted_rf)
+            return(llinear_model_evaluation_metrics.get("cross validate score"), rf_model_evaluation_metrics.get("cross validate score"))
