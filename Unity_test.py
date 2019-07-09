@@ -28,16 +28,15 @@ def test_classification_methods():
     for counter, mod in enumerate(models):
         
         test_model = ML_model(sets_paths[counter], ",", mod)
-        print(mod)
         test_model.load_data()
 
         if mod == "classification":
             rf_val_score, knn_val_score, lr_val_score = test_model.model_selection()
-            assert rf_val_score == 0.9332467532467532,"classification models prediction failed"
-            assert knn_val_score == 0.9232467532467533,"classification models prediction failed"
-            assert lr_val_score == 0.9414285714285715,"classification models prediction failed"
+            assert rf_val_score.get("cross validate score") == 0.9332467532467532,"classification models prediction failed"
+            assert knn_val_score.get("cross validate score") == 0.9232467532467533,"classification models prediction failed"
+            assert lr_val_score.get("cross validate score") == 0.9414285714285715,"classification models prediction failed"
         
         elif mod == "regression":
             lr_val_score, rf_val_score = test_model.model_selection()
-            assert lr_val_score == 0.9173373021738389, "regression models prediction failed"
-            assert rf_val_score == 0.8801737815707658, "regression models prediction failed"
+            assert lr_val_score.get("cross validate score") == 0.9173373021738389, "regression models prediction failed"
+            assert rf_val_score.get("cross validate score") == 0.8801737815707658, "regression models prediction failed"

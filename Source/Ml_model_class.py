@@ -187,7 +187,7 @@ class ML_model():
             predicted_lr = lr_classification()
             lr_model_evaluation_metrics = primary_model_evaluation(self.lr, self.y_test, predicted_lr)
 
-            return(rf_model_evaluation_metrics.get("cross validate score"), knn_model_evaluation_metrics.get("cross validate score"), lr_model_evaluation_metrics.get("cross validate score"))
+            return(rf_model_evaluation_metrics, knn_model_evaluation_metrics, lr_model_evaluation_metrics)
         
         elif self.model_type == "regression":
             predicted_linear = linear_regression()
@@ -195,4 +195,5 @@ class ML_model():
 
             predicted_rf = random_forest_regression()
             rf_model_evaluation_metrics = primary_model_evaluation(self.rfr, self.y_test, predicted_rf)
-            return(llinear_model_evaluation_metrics.get("cross validate score"), rf_model_evaluation_metrics.get("cross validate score"))
+            
+            return(llinear_model_evaluation_metrics, rf_model_evaluation_metrics)
