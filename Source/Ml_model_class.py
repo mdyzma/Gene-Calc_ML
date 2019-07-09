@@ -10,6 +10,9 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+
 from sklearn.neighbors import KNeighborsClassifier
 
 class ML_model():
@@ -86,7 +89,7 @@ class ML_model():
         Clasfication models: KNN, Random Forest, Logistic Regression
         """
 
-        def primary_model_evaluation(model, Y_true, Y_predicted):
+        def primary_model_evaluation(model, model_name, Y_true, Y_predicted):
             """method to basic evaluation of possible models"""
 
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
@@ -102,8 +105,8 @@ class ML_model():
                     "accuracy": accuracy
                     }
 
-                print("Model for classification problems, evaluation: {}"
-                .format(model_evaluation_metrics))
+                print("{}, evaluation: {}".format(model_name, 
+                model_evaluation_metrics))
 
             elif self.model_type == "regression":
                 mae = mean_absolute_error(Y_true, Y_predicted)
@@ -114,8 +117,8 @@ class ML_model():
                     "MSE": mse
                     }
 
-                print("Model for regression problems, evaluation: {}"
-                .format(model_evaluation_metrics))
+                print("{}, evaluation: {}".format(model_name, 
+                model_evaluation_metrics))
                 
             return model_evaluation_metrics
 
@@ -130,6 +133,7 @@ class ML_model():
         
         def knn_classification():
             """K Neighbors Classifier"""
+            """TODO data normazliation needed"""
             dict_of_results = {} # for k-n model
 
             for k in range(1, 20):
@@ -163,10 +167,25 @@ class ML_model():
         def linear_regression():
             """
             Linear regression model for regression problems
+            Ordinary least squares
             """
             self.lreg = LinearRegression()
             self.lreg.fit(self.X_train, self.y_train)
             predicted = self.lreg.predict(self.X_test)
+
+            return(predicted)
+
+        def lasso_regression():
+            self.lasso = Lasso(alpha=0.1)
+            self.lasso.fit(self.X_train, self.y_train)
+            predicted = self.lasso.predict(self.X_test)
+
+            return(predicted)
+
+        def ridge_regression():
+            self.ridge = Ridge(alpha=1.0)
+            self.ridge.fit(self.X_train, self.y_train)
+            predicted = self.ridge.predict(self.X_test)
 
             return(predicted)
 
@@ -177,23 +196,37 @@ class ML_model():
 
             return(predicted)
 
+
         if self.model_type == "classification":
             predicted_rf = rf_classification()
-            rf_model_evaluation_metrics = primary_model_evaluation(self.rfc, self.y_test, predicted_rf)
+            rf_model_evaluation_metrics = primary_model_evaluation(self.rfc, 
+            "Random forest classification", self.y_test, predicted_rf)
 
             predicted_knn = knn_classification()
-            knn_model_evaluation_metrics = primary_model_evaluation(self.knn, self.y_test, predicted_knn)
+            knn_model_evaluation_metrics = primary_model_evaluation(self.knn, 
+            "KNN classification", self.y_test, predicted_knn)
 
             predicted_lr = lr_classification()
-            lr_model_evaluation_metrics = primary_model_evaluation(self.lr, self.y_test, predicted_lr)
+            lr_model_evaluation_metrics = primary_model_evaluation(self.lr, 
+            "Logistic regression classification", self.y_test, predicted_lr)
 
             return(rf_model_evaluation_metrics, knn_model_evaluation_metrics, lr_model_evaluation_metrics)
         
         elif self.model_type == "regression":
             predicted_linear = linear_regression()
-            llinear_model_evaluation_metrics = primary_model_evaluation(self.lreg, self.y_test, predicted_linear)
+            llinear_model_evaluation_metrics = primary_model_evaluation(self.lreg, 
+            "Simple linear regression", self.y_test, predicted_linear)
 
             predicted_rf = random_forest_regression()
-            rf_model_evaluation_metrics = primary_model_evaluation(self.rfr, self.y_test, predicted_rf)
+            rf_model_evaluation_metrics = primary_model_evaluation(self.rfr, 
+            "Random forest regression", self.y_test, predicted_rf)
             
-            return(llinear_model_evaluation_metrics, rf_model_evaluation_metrics)
+            predicted_lasso = lasso_regression()
+            lasso_model_evaluation_metrics = primary_model_evaluation(self.lasso, 
+            "Lasso linear regression", self.y_test, predicted_lasso)
+            
+            predicted_ridge = ridge_regression()
+            ridge_model_evaluation_metrics = primary_model_evaluation(self.ridge, 
+            "Ridge linear regression", self.y_test, predicted_ridge)
+
+            return(llinear_model_evaluation_metrics, rf_model_evaluation_metrics, lasso_model_evaluation_metrics, ridge_model_evaluation_metrics)

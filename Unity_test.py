@@ -32,11 +32,13 @@ def test_classification_methods():
 
         if mod == "classification":
             rf_val_score, knn_val_score, lr_val_score = test_model.model_selection()
-            assert rf_val_score.get("cross validate score") == 0.9332467532467532,"classification models prediction failed"
-            assert knn_val_score.get("cross validate score") == 0.9232467532467533,"classification models prediction failed"
-            assert lr_val_score.get("cross validate score") == 0.9414285714285715,"classification models prediction failed"
+            assert rf_val_score.get("cross validate score") == 0.9332467532467532,"Random forest classification model prediction failed"
+            assert knn_val_score.get("cross validate score") == 0.9232467532467533,"KNN classification model prediction failed"
+            assert lr_val_score.get("cross validate score") == 0.9414285714285715,"Logistic classification model prediction failed"
         
         elif mod == "regression":
-            lr_val_score, rf_val_score = test_model.model_selection()
-            assert lr_val_score.get("cross validate score") == 0.9173373021738389, "regression models prediction failed"
-            assert rf_val_score.get("cross validate score") == 0.8801737815707658, "regression models prediction failed"
+            lr_val_score, rf_val_score, lasso_model, ridge_model = test_model.model_selection()
+            assert lr_val_score.get("cross validate score") == 0.9173373021738389,"Simple linear regression model prediction failed"
+            assert rf_val_score.get("cross validate score") == 0.8801737815707658,"Random forest regression model prediction failed"
+            assert lasso_model.get("cross validate score") == 0.9173373026078024,"Lasso regression model prediction failed"
+            assert ridge_model.get("cross validate score") == 0.9173375618293227,"Ridge regression model prediction failed"
