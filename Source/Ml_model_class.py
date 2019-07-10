@@ -15,9 +15,7 @@ from sklearn.linear_model import Lasso
 
 from sklearn.neighbors import KNeighborsClassifier
 
-class ML_model():
-    #TODO change class name
-    
+class Pre_model_constructor():    
     """
     class with methods to: load and check data, select regression or classyfication model
     based off accuracy.
@@ -84,7 +82,7 @@ class ML_model():
         return(self.X_train, self.y_test)
 
     def models_selector(self):
-            """method to type best model for current problem"""
+            """method to type best model for current problem from trained collection"""
             
             if self.model_type == "classification":
                 maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
@@ -100,6 +98,7 @@ class ML_model():
                         break
 
             print("Propably best model is: {}".format(best_model))
+            return best_model
 
     def model_selection(self):
         """
@@ -110,7 +109,8 @@ class ML_model():
         """
 
         def primary_model_evaluation(model, model_name, Y_true, Y_predicted):
-            """method to basic evaluation of possible models"""
+            """method to basic evaluation of models collection"""
+            #TODO matrix report to dataframe = better display
 
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
             self.y_train, cv=5)["test_score"])
@@ -154,6 +154,7 @@ class ML_model():
         def knn_classification():
             """K Neighbors Classifier"""
             """TODO data normazliation needed"""
+
             dict_of_results = {} # for k-n model
 
             for k in range(1, 20):
