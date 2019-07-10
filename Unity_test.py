@@ -1,8 +1,8 @@
-from Source.Ml_model_class import ML_model
+from Source.Pre_model_constructor import Pre_model_constructor
 import pytest
 
 models = ["classification", "regression"]
-sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
+sets_paths = ["Data_set/Iris.csv", "Data_set/USA_Housing.csv"]
 
 
 def test_instance_data_loading():
@@ -10,7 +10,7 @@ def test_instance_data_loading():
     
     for counter, mod in enumerate(models):
         
-        model = ML_model(sets_paths[counter], ",", mod)
+        model = Pre_model_constructor(sets_paths[counter], ",", mod)
 
         X_train, y_test = model.load_data()
 
@@ -27,7 +27,7 @@ def test_instance_data_loading():
 def test_classification_methods():
     for counter, mod in enumerate(models):
         
-        test_model = ML_model(sets_paths[counter], ",", mod)
+        test_model = Pre_model_constructor(sets_paths[counter], ",", mod)
         test_model.load_data()
 
         if mod == "classification":

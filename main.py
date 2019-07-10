@@ -1,4 +1,4 @@
-from Source.Ml_model_class import Pre_model_constructor
+from Source.Pre_model_constructor import Pre_model_constructor
 
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
