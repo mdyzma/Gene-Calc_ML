@@ -9,8 +9,8 @@ sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
 
 if __name__ == "__main__":
 
-    model_creator = Pre_model_constructor(path=sets_paths[1], delimiter_type=",",
-    model_type=models[1])
+    model_creator = Pre_model_constructor(path=sets_paths[0], delimiter_type=",",
+    model_type=models[0])
     #TODO data input validation is needed
 
     model_creator.load_data()

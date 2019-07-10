@@ -49,8 +49,8 @@ class Pre_model_constructor():
         def data_set_split(data):
             """
             User need to determine what are X varaibles and y in input data set
-            bellow is just temporary solution
-            temporary solution is that last column in data set is always y-variable
+            bellow is just temporary.
+            Temporary solution is that last column in data set is always y-variable
             """
             col_names = data.columns
             dim = len(col_names)
@@ -78,7 +78,10 @@ class Pre_model_constructor():
         return(self.X_train, self.y_test)
 
     def models_selector(self):
-            """method to type best model for current problem from trained collection"""
+            """method to type best model for current problem from trained collection
+            input is a dict with models accuracy scores [cross validation score]
+            output is a model name with the best mean accuracy
+            """
             
             if self.model_type == "classification":
                 maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
@@ -105,7 +108,12 @@ class Pre_model_constructor():
         """
 
         def primary_model_evaluation(model, model_name, Y_true, Y_predicted):
-            """method to basic evaluation of models collection"""
+            """method to basic evaluation of models collection
+            model = instance of model
+            model_name = name of algorithm
+            Y_true = y_test values
+            Y_predicted = y_values predicted by mentioned model 
+            """
             #TODO matrix report to dataframe = better display
 
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
@@ -171,9 +179,8 @@ class Pre_model_constructor():
             return(predicted)
         
         def lr_classification():
-            """Logistic Regression Classifier
-            #type of solver is just temporary, to consider more flexible options#
-            """
+            """Logistic Regression Classifier"""
+            
             self.lr = LogisticRegression(random_state=101, solver="newton-cg", multi_class='auto')
             self.lr.fit(self.X_train, self.y_train)
             predicted = self.lr.predict(self.X_test)
