@@ -90,14 +90,14 @@ class ML_model():
                 maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
                 for best_model, accuracy in self.models_accuracy.items():
                     if accuracy == maximum_accuracy:
-                        return best_model
+                        break
 
             
             elif self.model_type == "regression":
                 maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
                 for best_model, accuracy in self.models_accuracy.items():
                     if accuracy == maximum_accuracy:
-                        return best_model
+                        break
 
             print("Propably best model is: {}".format(best_model))
 
