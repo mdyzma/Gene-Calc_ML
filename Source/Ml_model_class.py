@@ -16,6 +16,7 @@ from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
 
 class ML_model():
+    #TODO change class name
     
     """
     class with methods to: load and check data, select regression or classyfication model
@@ -35,6 +36,7 @@ class ML_model():
         self.X_test = None
         self.y_train = None
         self.y_test = None
+        self.models_accuracy = {}
         
     def load_data(self):
        
@@ -80,6 +82,24 @@ class ML_model():
             X, y, test_size=0.30, random_state=101)
         
         return(self.X_train, self.y_test)
+
+    def models_selector(self):
+            """method to type best model for current problem"""
+            
+            if self.model_type == "classification":
+                maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
+                for best_model, accuracy in self.models_accuracy.items():
+                    if accuracy == maximum_accuracy:
+                        return best_model
+
+            
+            elif self.model_type == "regression":
+                maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
+                for best_model, accuracy in self.models_accuracy.items():
+                    if accuracy == maximum_accuracy:
+                        return best_model
+
+            print("Propably best model is: {}".format(best_model))
 
     def model_selection(self):
         """
@@ -196,8 +216,8 @@ class ML_model():
 
             return(predicted)
 
-
         if self.model_type == "classification":
+
             predicted_rf = rf_classification()
             rf_model_evaluation_metrics = primary_model_evaluation(self.rfc, 
             "Random forest classification", self.y_test, predicted_rf)
@@ -209,10 +229,15 @@ class ML_model():
             predicted_lr = lr_classification()
             lr_model_evaluation_metrics = primary_model_evaluation(self.lr, 
             "Logistic regression classification", self.y_test, predicted_lr)
-
+            
+            self.models_accuracy.update({"Random forest": rf_model_evaluation_metrics.get("cross validate score"), 
+            "KNN": knn_model_evaluation_metrics.get("cross validate score"), 
+            "Logistic regression": lr_model_evaluation_metrics.get("cross validate score")})
+            
             return(rf_model_evaluation_metrics, knn_model_evaluation_metrics, lr_model_evaluation_metrics)
         
         elif self.model_type == "regression":
+
             predicted_linear = linear_regression()
             llinear_model_evaluation_metrics = primary_model_evaluation(self.lreg, 
             "Simple linear regression", self.y_test, predicted_linear)
@@ -229,4 +254,11 @@ class ML_model():
             ridge_model_evaluation_metrics = primary_model_evaluation(self.ridge, 
             "Ridge linear regression", self.y_test, predicted_ridge)
 
+            self.models_accuracy.update({"Simple linear regression": llinear_model_evaluation_metrics.get("cross validate score"), 
+            "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
+            "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
+            "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")})
+
             return(llinear_model_evaluation_metrics, rf_model_evaluation_metrics, lasso_model_evaluation_metrics, ridge_model_evaluation_metrics)
+
+        
