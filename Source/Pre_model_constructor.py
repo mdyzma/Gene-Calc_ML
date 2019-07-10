@@ -30,10 +30,6 @@ class Pre_model_constructor():
         self.data_path = path
         self.delimiter_type = delimiter_type
         self.model_type = model_type
-        self.X_train = None
-        self.X_test = None
-        self.y_train = None
-        self.y_test = None
         self.models_accuracy = {}
         
     def load_data(self):
@@ -142,7 +138,8 @@ class Pre_model_constructor():
                 
             return model_evaluation_metrics
 
-        #classification models bellow
+        #NOTE classification models bellow
+
         def rf_classification():
             """Random Rorest Classifier"""
             self.rfc = RandomForestClassifier(n_estimators=100, random_state=101)
@@ -183,7 +180,7 @@ class Pre_model_constructor():
             
             return(predicted)
 
-        #regression models bellow
+        #NOTE regression models bellow
 
         def linear_regression():
             """

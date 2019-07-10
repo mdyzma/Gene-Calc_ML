@@ -1,5 +1,9 @@
 from Source.Pre_model_constructor import Pre_model_constructor
 
+#NOTE Type of model: regression or classification is selected by user
+#NOTE also data set used to training models.
+#NOTE Bellow is just a temporary solution for tests needs
+
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
 
