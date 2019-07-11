@@ -3,7 +3,7 @@ from .Models import Models
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 
-class Model_constructor(Pre_model_constructor, Models):
+class Model_constructor(Pre_model_constructor):
     
     def __init__(self, path, delimiter_type, model_type, best_model):
         super().__init__(path, delimiter_type, model_type)
