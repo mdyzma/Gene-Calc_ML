@@ -139,9 +139,9 @@ class Pre_model_constructor():
                 
             return model_evaluation_metrics
 
-        if self.model_type == "classification":
+        models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
 
-            models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
+        if self.model_type == "classification":
 
             rfc, predicted_rf = models.rf_classification()
             rf_model_evaluation_metrics = primary_model_evaluation(rfc, 
@@ -162,8 +162,6 @@ class Pre_model_constructor():
             return(rf_model_evaluation_metrics, knn_model_evaluation_metrics, lr_model_evaluation_metrics)
         
         elif self.model_type == "regression":
-
-            models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
 
             lreg, predicted_linear = models.linear_regression()
             llinear_model_evaluation_metrics = primary_model_evaluation(lreg, 
