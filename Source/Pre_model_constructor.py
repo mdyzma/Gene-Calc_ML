@@ -6,14 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_squared_error
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import Lasso
-
-from sklearn.neighbors import KNeighborsClassifier
+from .Models import Models
 
 class Pre_model_constructor():    
     """
@@ -146,93 +139,20 @@ class Pre_model_constructor():
                 
             return model_evaluation_metrics
 
-        #NOTE classification models bellow
-
-        def rf_classification():
-            """Random Rorest Classifier"""
-            self.rfc = RandomForestClassifier(n_estimators=100, random_state=101)
-            self.rfc.fit(self.X_train, self.y_train)
-            predicted = self.rfc.predict(self.X_test)
-            
-            return(predicted)
-        
-        def knn_classification():
-            """K Neighbors Classifier"""
-            """TODO data normazliation needed"""
-
-            dict_of_results = {} # for k-n model
-
-            for k in range(1, 20):
-                
-                if k % 2 != 0:
-                    knn = KNeighborsClassifier(n_neighbors=k)
-                    knn.fit(self.X_train, self.y_train)
-                    predicted = knn.predict(self.X_test)
-                    accuracy = accuracy_score(self.y_test, predicted)
-                    dict_of_results.update({k: accuracy})
-            
-            self.best_k = max(dict_of_results, key=dict_of_results.get)
-            self.knn = KNeighborsClassifier(n_neighbors=self.best_k)
-            self.knn.fit(self.X_train, self.y_train)
-            predicted = self.knn.predict(self.X_test)
-
-            return(predicted)
-        
-        def lr_classification():
-            """Logistic Regression Classifier"""
-            
-            self.lr = LogisticRegression(random_state=101, solver="newton-cg", multi_class='auto')
-            self.lr.fit(self.X_train, self.y_train)
-            predicted = self.lr.predict(self.X_test)
-            
-            return(predicted)
-
-        #NOTE regression models bellow
-
-        def linear_regression():
-            """
-            Linear regression model for regression problems
-            Ordinary least squares
-            """
-            self.lreg = LinearRegression()
-            self.lreg.fit(self.X_train, self.y_train)
-            predicted = self.lreg.predict(self.X_test)
-
-            return(predicted)
-
-        def lasso_regression():
-            self.lasso = Lasso(alpha=0.1)
-            self.lasso.fit(self.X_train, self.y_train)
-            predicted = self.lasso.predict(self.X_test)
-
-            return(predicted)
-
-        def ridge_regression():
-            self.ridge = Ridge(alpha=1.0)
-            self.ridge.fit(self.X_train, self.y_train)
-            predicted = self.ridge.predict(self.X_test)
-
-            return(predicted)
-
-        def random_forest_regression():
-            self.rfr = RandomForestRegressor(random_state=101, n_estimators=100)
-            self.rfr.fit(self.X_train, self.y_train)
-            predicted = self.rfr.predict(self.X_test)
-
-            return(predicted)
-
         if self.model_type == "classification":
 
-            predicted_rf = rf_classification()
-            rf_model_evaluation_metrics = primary_model_evaluation(self.rfc, 
+            models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
+
+            rfc, predicted_rf = models.rf_classification()
+            rf_model_evaluation_metrics = primary_model_evaluation(rfc, 
             "Random forest classification", self.y_test, predicted_rf)
 
-            predicted_knn = knn_classification()
-            knn_model_evaluation_metrics = primary_model_evaluation(self.knn, 
+            knn, predicted_knn = models.knn_classification()
+            knn_model_evaluation_metrics = primary_model_evaluation(knn, 
             "KNN classification", self.y_test, predicted_knn)
 
-            predicted_lr = lr_classification()
-            lr_model_evaluation_metrics = primary_model_evaluation(self.lr, 
+            lr, predicted_lr = models.lr_classification()
+            lr_model_evaluation_metrics = primary_model_evaluation(lr, 
             "Logistic regression classification", self.y_test, predicted_lr)
             
             self.models_accuracy.update({"Random forest": rf_model_evaluation_metrics.get("cross validate score"), 
@@ -243,20 +163,22 @@ class Pre_model_constructor():
         
         elif self.model_type == "regression":
 
-            predicted_linear = linear_regression()
-            llinear_model_evaluation_metrics = primary_model_evaluation(self.lreg, 
+            models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
+
+            lreg, predicted_linear = models.linear_regression()
+            llinear_model_evaluation_metrics = primary_model_evaluation(lreg, 
             "Simple linear regression", self.y_test, predicted_linear)
 
-            predicted_rf = random_forest_regression()
-            rf_model_evaluation_metrics = primary_model_evaluation(self.rfr, 
+            rfr, predicted_rf = models.random_forest_regression()
+            rf_model_evaluation_metrics = primary_model_evaluation(rfr, 
             "Random forest regression", self.y_test, predicted_rf)
             
-            predicted_lasso = lasso_regression()
-            lasso_model_evaluation_metrics = primary_model_evaluation(self.lasso, 
+            lasso, predicted_lasso = models.lasso_regression()
+            lasso_model_evaluation_metrics = primary_model_evaluation(lasso, 
             "Lasso linear regression", self.y_test, predicted_lasso)
             
-            predicted_ridge = ridge_regression()
-            ridge_model_evaluation_metrics = primary_model_evaluation(self.ridge, 
+            ridge, predicted_ridge = models.ridge_regression()
+            ridge_model_evaluation_metrics = primary_model_evaluation(ridge, 
             "Ridge linear regression", self.y_test, predicted_ridge)
 
             self.models_accuracy.update({"Simple linear regression": llinear_model_evaluation_metrics.get("cross validate score"), 
