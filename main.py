@@ -15,13 +15,14 @@ if __name__ == "__main__":
     model_type=models[val])
     #TODO data input validation is needed
 
-    pre_model_creator.load_data()
+    X_train, X_test, y_train, y_test = pre_model_creator.load_data()
     pre_model_creator.model_selection()
-    best_model = pre_model_creator.models_selector() # temorary solution, best model is selected by cross validation
-
-    # model_constructor = Model_constructor(path=sets_paths[0], delimiter_type=",",
-    # model_type=models[0], best_model="Random forest classification")
-    # model_constructor.load_data()
+    
+    #NOTE temporary solution, best model is selected by cross validation
+    best_model = pre_model_creator.models_selector() 
+    
+    model_creator = Model_constructor(best_model, X_train, X_test, y_train, y_test)
+    model_creator.grid_search()
 
     #NOTE in this step user need to select the best model (from trained collection); based on: accuracy, 
     #cross validation and other metrics

@@ -18,7 +18,7 @@ class Models():
     #NOTE classification models bellow
 
     def rf_classification(self):
-        """Random Rorest Classifier"""
+        """Random Forest Classifier"""
         rfc = RandomForestClassifier(n_estimators=100, random_state=101)
         rfc.fit(self.X_train, self.y_train)
         predicted = rfc.predict(self.X_test)
@@ -49,7 +49,8 @@ class Models():
     
     def lr_classification(self):
         """Logistic Regression Classifier"""
-
+        #TODO normalization
+        
         lr = LogisticRegression(random_state=101, solver="newton-cg", multi_class='auto')
         lr.fit(self.X_train, self.y_train)
         predicted = lr.predict(self.X_test)

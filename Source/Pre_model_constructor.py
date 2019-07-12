@@ -68,7 +68,7 @@ class Pre_model_constructor():
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
         
-        return(self.X_train, self.y_test)
+        return(self.X_train, self.X_test, self.y_train, self.y_test)
 
     def models_selector(self):
             """method to type best model for current problem from trained collection
@@ -107,17 +107,17 @@ class Pre_model_constructor():
             Y_true = y_test values
             Y_predicted = y_values predicted by mentioned model 
             """
-            #TODO matrix report to dataframe = better display
-
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
             self.y_train, cv=5)["test_score"])
 
             if self.model_type == "classification":
                 accuracy = accuracy_score(Y_true, Y_predicted)
-                matrix_report = classification_report(Y_true, Y_predicted)
-
+                matrix_report = classification_report(Y_true, Y_predicted, output_dict=True)
+                
+                df_matrix_report = pd.DataFrame(matrix_report)
+                
                 model_evaluation_metrics = {
-                    "matrix_report": matrix_report,
+                    "matrix_report": df_matrix_report,
                     "cross validate score": cross_validate_score,
                     "accuracy": accuracy
                     }
