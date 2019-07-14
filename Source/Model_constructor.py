@@ -7,6 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
+from numpy import arange
 
 class Model_constructor():
     
@@ -34,7 +35,7 @@ class Model_constructor():
         Lasso linear regression, Ridge linear regression
         """
         def rf_classification_gs():
-            parameters = {"n_estimators": [50, 500], "bootstrap": ("True", "False")}
+            parameters = {"n_estimators": [50, 500]}
 
             rfc = RandomForestClassifier(random_state=101)
             gs_rfc = GridSearchCV(rfc, parameters, cv=5)
@@ -46,10 +47,11 @@ class Model_constructor():
 
         def knn_classification_gs():
 
-            k_values = []
-            for values in range(30):
-                if values % 2 != 0:
-                    k_values.append(values)
+            def odd(x):
+                if x % 2 != 0:
+                    return x
+
+            k_values = list(filter(odd, range(50)))
 
             parameters = {"n_neighbors": k_values, "weights": ("uniform", "distance"), 
             "algorithm": ("ball_tree", "kd_tree", "brute"), "p": [1, 2]}
@@ -75,20 +77,43 @@ class Model_constructor():
 
             print(hyperparameters_res, accuracy_gs)
 
-        lr_classification_gs()
-
-        def sl_regression_gs():
-            parameters = {}
-            pass
+        #NOTE no search gird method for simple linear regression [no needed now]
 
         def rf_regression_gs():
-            parameters = {}
-            pass
+            parameters = {"n_estimators": [50, 500]}
+            
+            rf = RandomForestRegressor()
+            gs_rf = GridSearchCV(rf, parameters, cv=5)
+            gs_rf.fit(self.X_train, self.y_train)
+
+            hyperparameters_res = gs_rf.best_params_
+            accuracy_gs = gs_rf.best_score_
+
+            print(hyperparameters_res, accuracy_gs)
 
         def lss_regression_gs():
-            parameters = {}
-            pass
+            a_range = list(arange(0.1, 3, 0.1))
+            parameters = {"alpha": a_range, "normalize": ("True", "False")}            
+            
+            lss = Lasso()
+            gs_lss = GridSearchCV(lss, parameters, cv=5)
+            gs_lss.fit(self.X_train, self.y_train)
+
+            hyperparameters_res = gs_lss.best_params_
+            accuracy_gs = gs_lss.best_score_
+
+            print(hyperparameters_res, accuracy_gs)
 
         def rg_regression_gs():
-            parameters = {}
-            pass
+
+            a_range = list(arange(0.1, 3, 0.1))
+            parameters = {"alpha": a_range}
+
+            rg = Ridge(solver="auto")
+            gs_rg = GridSearchCV(rg, parameters, cv=5)
+            gs_rg.fit(self.X_train, self.y_train)
+
+            hyperparameters_res = gs_rg.best_params_
+            accuracy_gs = gs_rg.best_score_
+
+            print(hyperparameters_res, accuracy_gs)

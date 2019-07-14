@@ -7,7 +7,7 @@ from Source.Model_constructor import Model_constructor
 
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
-val = 0
+val = 1
 
 if __name__ == "__main__":
 

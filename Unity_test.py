@@ -12,7 +12,7 @@ def test_instance_data_loading():
         
         model = Pre_model_constructor(sets_paths[counter], ",", mod)
 
-        X_train, y_test = model.load_data()
+        X_train, X_test, y_train, y_test = model.load_data()
 
         if mod == "classification":
 
