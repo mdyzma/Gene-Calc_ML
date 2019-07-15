@@ -139,7 +139,7 @@ class Pre_model_constructor():
                 
             return model_evaluation_metrics
 
-        models = Models(self.X_train, self.y_train, self.X_test, self.y_test)
+        models = Models(self.X_train, self.X_test, self.y_train, self.y_test)
 
         if self.model_type == "classification":
 
@@ -155,7 +155,7 @@ class Pre_model_constructor():
             lr_model_evaluation_metrics = primary_model_evaluation(lr, 
             "Logistic regression classification", self.y_test, predicted_lr)
             
-            self.models_accuracy.update({"Random forest": rf_model_evaluation_metrics.get("cross validate score"), 
+            self.models_accuracy.update({"Random forest classification": rf_model_evaluation_metrics.get("cross validate score"), 
             "KNN": knn_model_evaluation_metrics.get("cross validate score"), 
             "Logistic regression": lr_model_evaluation_metrics.get("cross validate score")})
             

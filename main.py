@@ -1,5 +1,6 @@
 from Source.Pre_model_constructor import Pre_model_constructor
 from Source.Model_constructor import Model_constructor
+from Source.Models import Models
 
 #NOTE Type of model: regression or classification is selected by user
 #NOTE also data set used to training models.
@@ -20,9 +21,21 @@ if __name__ == "__main__":
     
     #NOTE temporary solution, best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
-    
+
     model_creator = Model_constructor(best_model, X_train, X_test, y_train, y_test)
-    model_creator.grid_search()
+    hyperparameters, accuracy = model_creator.grid_search()
+    
+    print(hyperparameters)
+
+    model_ready = Models(X_train, X_test, y_train, y_test)
+    
+    if best_model == "Logistic regression":
+        model_ready.lr_classification(**hyperparameters)
+
+    elif best_model == "Ridge linear regression":
+        model_ready.ridge_regression(**hyperparameters)
+
+        
 
     #NOTE in this step user need to select the best model (from trained collection); based on: accuracy, 
     #cross validation and other metrics

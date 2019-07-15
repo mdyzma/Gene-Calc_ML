@@ -35,6 +35,7 @@ class Model_constructor():
         Lasso linear regression, Ridge linear regression
         """
         def rf_classification_gs():
+            """Search grid for randof forest classification"""
             parameters = {"n_estimators": [50, 500]}
 
             rfc = RandomForestClassifier(random_state=101)
@@ -43,9 +44,10 @@ class Model_constructor():
             hyperparameters_res = gs_rfc.best_params_
             accuracy_gs = gs_rfc.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
 
         def knn_classification_gs():
+            """Search grid for KNN classification"""
 
             def odd(x):
                 if x % 2 != 0:
@@ -63,10 +65,14 @@ class Model_constructor():
             hyperparameters_res = gs_knn.best_params_
             accuracy_gs = gs_knn.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
 
         def lr_classification_gs():
-            parameters = {"solver": ("newton-cg", "lbfgs", "sag", "saga", "liblinear")}
+            """Search grid for logistic regression classification"""
+            
+            c_range = list(arange(0.1, 1, 0.1))
+            parameters = {"solver": ("newton-cg", "lbfgs", "sag", "saga", "liblinear"), 
+            "warm_start": ("True", "False"), "C": c_range}
 
             lr = LogisticRegression(multi_class='auto')
             gs_lr = GridSearchCV(lr, parameters, cv=5)
@@ -75,11 +81,13 @@ class Model_constructor():
             hyperparameters_res = gs_lr.best_params_
             accuracy_gs = gs_lr.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
 
         #NOTE no search gird method for simple linear regression [no needed now]
 
         def rf_regression_gs():
+            """Search grid for random foresr regression"""
+
             parameters = {"n_estimators": [50, 500]}
             
             rf = RandomForestRegressor()
@@ -89,10 +97,12 @@ class Model_constructor():
             hyperparameters_res = gs_rf.best_params_
             accuracy_gs = gs_rf.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
 
         def lss_regression_gs():
-            a_range = list(arange(0.1, 3, 0.1))
+            """Search grid for Lasso regression"""
+            
+            a_range = list(arange(0.1, 1, 0.1))
             parameters = {"alpha": a_range, "normalize": ("True", "False")}            
             
             lss = Lasso()
@@ -102,11 +112,12 @@ class Model_constructor():
             hyperparameters_res = gs_lss.best_params_
             accuracy_gs = gs_lss.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
 
         def rg_regression_gs():
+            """Search grid for Ridge regression"""
 
-            a_range = list(arange(0.1, 3, 0.1))
+            a_range = list(arange(0.1, 1, 0.1))
             parameters = {"alpha": a_range}
 
             rg = Ridge(solver="auto")
@@ -116,4 +127,37 @@ class Model_constructor():
             hyperparameters_res = gs_rg.best_params_
             accuracy_gs = gs_rg.best_score_
 
-            print(hyperparameters_res, accuracy_gs)
+            return(hyperparameters_res, accuracy_gs)
+        
+        def use_best_model():
+            hyperparameters, accuracy = ["", ""]
+            
+            if self.selected_model == "Random forest classification":
+                hyperparameters, accuracy = rf_classification_gs()
+
+            elif self.selected_model == "KNN classification":
+                hyperparameters, accuracy = knn_classification_gs()
+
+            elif self.selected_model == "Logistic regression":
+                hyperparameters, accuracy = lr_classification_gs()
+
+            elif self.selected_model == "Simple linear regression":
+                print("Search grid for simple linear regression model no available")
+
+            elif self.selected_model == "Random forest regression":
+                hyperparameters, accuracy = rf_regression_gs()
+
+            elif self.selected_model == "Lasso linear regression":
+                hyperparameters, accuracy = lss_regression_gs()
+
+            elif self.selected_model == "Ridge linear regression":
+               hyperparameters, accuracy = rg_regression_gs()
+
+            return(hyperparameters, accuracy)
+
+        hyperparameters, accuracy = use_best_model()
+        return(hyperparameters, accuracy)
+
+
+
+            

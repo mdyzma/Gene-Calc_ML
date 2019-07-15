@@ -9,10 +9,10 @@ from sklearn.metrics import accuracy_score
 
 class Models():
 
-    def __init__(self, X_train, y_train, X_test, y_test):
+    def __init__(self, X_train, X_test, y_train, y_test):
         self.X_train = X_train
-        self.y_train = y_train
         self.X_test = X_test
+        self.y_train = y_train
         self.y_test = y_test
 
     #NOTE classification models bellow
@@ -27,7 +27,7 @@ class Models():
     
     def knn_classification(self):
         """K Neighbors Classifier"""
-        """TODO data normazliation needed"""
+        """TODO data normalization needed"""
 
         dict_of_results = {} # for k-n model
 
@@ -47,11 +47,15 @@ class Models():
 
         return(knn, predicted)
     
-    def lr_classification(self):
+    def lr_classification(self, max_iter=200,  C=1, solver="saga", 
+    warm_start=True, multi_class="auto", **kwargs):
+
         """Logistic Regression Classifier"""
         #TODO normalization
         
-        lr = LogisticRegression(random_state=101, solver="newton-cg", multi_class='auto')
+        lr = LogisticRegression(solver=solver, max_iter=max_iter, C=C, 
+        warm_start=warm_start, multi_class=multi_class)
+
         lr.fit(self.X_train, self.y_train)
         predicted = lr.predict(self.X_test)
         
@@ -77,11 +81,11 @@ class Models():
 
         return(lasso, predicted)
 
-    def ridge_regression(self):
-        ridge = Ridge(alpha=1.0)
+    def ridge_regression(self, alpha=1.0, **kwargs):
+        ridge = Ridge(alpha=alpha)
         ridge.fit(self.X_train, self.y_train)
         predicted = ridge.predict(self.X_test)
-
+        print(ridge)
         return(ridge, predicted)
 
     def random_forest_regression(self):
@@ -90,3 +94,7 @@ class Models():
         predicted = rfr.predict(self.X_test)
 
         return(rfr, predicted)
+
+    def predict(self, model, data):
+        predicted_data = model.predict(data)
+        print(predicted_data)
