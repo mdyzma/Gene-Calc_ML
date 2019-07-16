@@ -17,7 +17,7 @@ if __name__ == "__main__":
     #TODO data input validation is needed
 
     X_columns, y_column, X_train, X_test, y_train, y_test = pre_model_creator.load_data()
-    pre_model_creator.model_selection()
+    pre_model_creator.best_model_selection()
     
     #NOTE temporary solution, best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
@@ -57,8 +57,3 @@ if __name__ == "__main__":
     print(X_columns)
     model_ready.predict(model, y_column)
     model_ready.accuracy_test(gs_accuracy, predicted, val)
-
-    #NOTE in this step user need to select the best model (from trained collection); based on: accuracy, 
-    #NOTE cross validation and other metrics
-    
-    #NOTE only selected model will be proceed in next step (grid search)

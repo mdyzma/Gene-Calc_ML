@@ -87,7 +87,8 @@ class Models():
 
         return(lreg, predicted)
 
-    def lasso_regression(self, alpha=1, **kwargs):
+    def lasso_regression(self, alpha=1.0, **kwargs):
+        """Lasso regression model"""
         lasso = Lasso(alpha=alpha)
         lasso.fit(self.X_train, self.y_train)
         predicted = lasso.predict(self.X_test)
@@ -95,6 +96,7 @@ class Models():
         return(lasso, predicted)
 
     def ridge_regression(self, alpha=1.0, **kwargs):
+        """Ridge regression model"""
         ridge = Ridge(alpha=alpha)
         ridge.fit(self.X_train, self.y_train)
         predicted = ridge.predict(self.X_test)
@@ -109,9 +111,11 @@ class Models():
         return(rfr, predicted)
 
     def accuracy_test(self, gs_accuracy, predicted, val):
+        """Method return accuracy for test data set [R2 in case of regression models]"""
 
         if val == 0:
             accuracy = accuracy_score(self.y_test, predicted)
+        
         elif val == 1:
             accuracy = r2_score(self.y_test, predicted)
 

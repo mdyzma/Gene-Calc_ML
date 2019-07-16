@@ -7,7 +7,6 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
-
 from .Models import Models
 
 class Pre_model_constructor():    
@@ -72,29 +71,7 @@ class Pre_model_constructor():
         
         return(X_columns, y_column, self.X_train, self.X_test, self.y_train, self.y_test)
 
-    def models_selector(self):
-            """method to type best model for current problem from trained collection
-            input is a dict with models accuracy scores [cross validation score]
-            output is a model name with the best mean accuracy
-            """
-            
-            if self.model_type == "classification":
-                maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
-                for best_model, accuracy in self.models_accuracy.items():
-                    if accuracy == maximum_accuracy:
-                        break
-
-            
-            elif self.model_type == "regression":
-                maximum_accuracy = max(self.models_accuracy, key=self.models_accuracy.get)
-                for best_model, accuracy in self.models_accuracy.items():
-                    if accuracy == maximum_accuracy:
-                        break
-
-            print("Propably best model is: {}".format(best_model))
-            return best_model
-
-    def model_selection(self):
+    def best_model_selection(self):
         """
         Method to select accurate model for regression or calssification problem based 
         off accuracy and cross validation.
@@ -186,5 +163,21 @@ class Pre_model_constructor():
             "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
             "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
             "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")})
+        
+    def models_selector(self):
+
+        """method to type best model for current problem from trained collection
+        input is a dict with models accuracy scores [cross validation score]
+        output is a model name with the best mean accuracy
+        """
+        print(self.models_accuracy)
+        if self.model_type == "classification":
+            best_model = max(self.models_accuracy, key=self.models_accuracy.get)
+            
+        elif self.model_type == "regression":
+            best_model = max(self.models_accuracy, key=self.models_accuracy.get)
+
+        print("Propably best model is: {}".format(best_model))
+        return best_model
 
         

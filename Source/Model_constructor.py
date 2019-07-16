@@ -128,33 +128,33 @@ class Model_constructor():
             return(hyperparameters_res, accuracy_gs)
         
         def use_best_model():
-            hyperparameters, accuracy = ["", ""]
+            hyperparameters, accuracy_gs = ["", ""]
             
             if self.selected_model == "Random forest classification":
-                hyperparameters, accuracy = rf_classification_gs()
+                hyperparameters, accuracy_gs = rf_classification_gs()
 
             elif self.selected_model == "KNN classification":
-                hyperparameters, accuracy = knn_classification_gs()
+                hyperparameters, accuracy_gs = knn_classification_gs()
 
             elif self.selected_model == "Logistic regression":
-                hyperparameters, accuracy = lr_classification_gs()
+                hyperparameters, accuracy_gs = lr_classification_gs()
 
             elif self.selected_model == "Simple linear regression":
                 print("Search grid for simple linear regression model no available")
 
             elif self.selected_model == "Random forest regression":
-                hyperparameters, accuracy = rf_regression_gs()
+                hyperparameters, accuracy_gs = rf_regression_gs()
 
             elif self.selected_model == "Lasso linear regression":
-                hyperparameters, accuracy = lss_regression_gs()
+                hyperparameters, accuracy_gs = lss_regression_gs()
 
             elif self.selected_model == "Ridge linear regression":
-               hyperparameters, accuracy = rg_regression_gs()
+               hyperparameters, accuracy_gs = rg_regression_gs()
 
-            return(hyperparameters, accuracy)
+            return(hyperparameters, accuracy_gs)
 
-        hyperparameters, accuracy = use_best_model()
-        return(hyperparameters, accuracy)
+        hyperparameters, accuracy_gs = use_best_model()
+        return(hyperparameters, accuracy_gs)
 
 
 
