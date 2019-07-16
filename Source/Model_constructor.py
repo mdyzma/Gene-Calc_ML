@@ -11,13 +11,11 @@ from numpy import arange
 
 class Model_constructor():
     
-    def __init__(self, best_model, X_train, X_test, y_train, y_test):        
+    def __init__(self, best_model, X_train, y_train):        
         
         self.selected_model = best_model
         self.X_train = X_train
-        self.X_test = X_test
         self.y_train = y_train
-        self.y_test = y_test
 
     def grid_search(self):
 

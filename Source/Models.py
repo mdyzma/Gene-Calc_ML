@@ -6,7 +6,11 @@ from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import r2_score
+
 import numpy as np
+
+#TODO add naive methods for accuracy comparison
 
 class Models():
 
@@ -56,7 +60,7 @@ class Models():
 
         return(knn, predicted)
     
-    def lr_classification(self, max_iter=200,  C=1, solver="saga", 
+    def lr_classification(self, max_iter=50,  C=1, solver="saga", 
     warm_start=True, multi_class="auto", **kwargs):
 
         """Logistic Regression Classifier"""
@@ -104,10 +108,20 @@ class Models():
 
         return(rfr, predicted)
 
+    def accuracy_test(self, gs_accuracy, predicted, val):
+
+        if val == 0:
+            accuracy = accuracy_score(self.y_test, predicted)
+        elif val == 1:
+            accuracy = r2_score(self.y_test, predicted)
+
+        print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
+            .format(gs_accuracy, accuracy))
+
     def predict(self, model, y_column):
         """method to predict y values using best model with best hyperparameters"""
 
-        input_values = input("Input X values: sep by commas => ").split(",")
+        input_values = input("Input X values: separated by commas => ").split(",")
         input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
 
         predicted_data = model.predict(input_values)

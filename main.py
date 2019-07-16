@@ -8,7 +8,7 @@ from Source.Models import Models
 
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
-val = 0
+val = 1
 
 if __name__ == "__main__":
 
@@ -22,8 +22,8 @@ if __name__ == "__main__":
     #NOTE temporary solution, best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
 
-    model_creator = Model_constructor(best_model, X_train, X_test, y_train, y_test)
-    hyperparameters, accuracy = model_creator.grid_search()
+    model_creator = Model_constructor(best_model, X_train, y_train)
+    hyperparameters, gs_accuracy = model_creator.grid_search()
     
     print(hyperparameters)
 
@@ -32,30 +32,31 @@ if __name__ == "__main__":
     if val == 0: #classifications models
 
         if best_model == "Random forest classification":
-            model = model_ready.rf_classification(**hyperparameters)[0]
+            model, predicted = model_ready.rf_classification(**hyperparameters)
 
         elif best_model == "KNN classification":
-            model = model_ready.knn_classification(**hyperparameters)[0]
+            model, predicted = model_ready.knn_classification(**hyperparameters)
 
         elif best_model == "Logistic regression":
-            model = model_ready.lr_classification(**hyperparameters)[0]
+            model, predicted = model_ready.lr_classification(**hyperparameters)
 
     elif val == 1: #regression models
 
         if best_model == "Simple linear regression":
-            model = model_ready.linear_regression()
+            model, predicted = model_ready.linear_regression()
 
         elif best_model == "lasso_regression":
-            model = model_ready.lasso_regression(**hyperparameters)[0]
+            model, predicted = model_ready.lasso_regression(**hyperparameters)
         
         elif best_model == "Ridge linear regression":
-            model = model_ready.ridge_regression(**hyperparameters)[0]
+            model, predicted = model_ready.ridge_regression(**hyperparameters)
 
         elif best_model == "random_forest_regression":
-            model = model_ready.random_forest_regression(**hyperparameters)[0]
+            model, predicted = model_ready.random_forest_regression(**hyperparameters)
 
     print(X_columns)
     model_ready.predict(model, y_column)
+    model_ready.accuracy_test(gs_accuracy, predicted, val)
 
     #NOTE in this step user need to select the best model (from trained collection); based on: accuracy, 
     #NOTE cross validation and other metrics

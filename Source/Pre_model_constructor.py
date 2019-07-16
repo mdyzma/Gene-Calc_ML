@@ -6,6 +6,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+
 from .Models import Models
 
 class Pre_model_constructor():    
@@ -128,10 +130,13 @@ class Pre_model_constructor():
             elif self.model_type == "regression":
                 mae = mean_absolute_error(Y_true, Y_predicted)
                 mse = mean_squared_error(Y_true, Y_predicted)
+                r2 = r2_score(Y_true, Y_predicted)
+
                 model_evaluation_metrics = {
                     "cross validate score": cross_validate_score,
                     "MAE": mae,
-                    "MSE": mse
+                    "MSE": mse,
+                    "R2": r2
                     }
 
                 print("{}, evaluation: {}".format(model_name, 
@@ -158,9 +163,7 @@ class Pre_model_constructor():
             self.models_accuracy.update({"Random forest classification": rf_model_evaluation_metrics.get("cross validate score"), 
             "KNN": knn_model_evaluation_metrics.get("cross validate score"), 
             "Logistic regression": lr_model_evaluation_metrics.get("cross validate score")})
-            
-            return(rf_model_evaluation_metrics, knn_model_evaluation_metrics, lr_model_evaluation_metrics)
-        
+                    
         elif self.model_type == "regression":
 
             lreg, predicted_linear = models.linear_regression()
@@ -183,7 +186,5 @@ class Pre_model_constructor():
             "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
             "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
             "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")})
-
-            return(llinear_model_evaluation_metrics, rf_model_evaluation_metrics, lasso_model_evaluation_metrics, ridge_model_evaluation_metrics)
 
         
