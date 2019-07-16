@@ -53,7 +53,7 @@ class Pre_model_constructor():
             X = np.array(data[X_columns])
             y = np.array(data[y_column]).ravel()
 
-            return(X, y)
+            return(X_columns, y_column, X, y)
 
         suffix = data_type(path=self.data_path)
     
@@ -63,12 +63,12 @@ class Pre_model_constructor():
         elif suffix == "xlsx" or suffix == "xls":
             data_set = pd.read_excel(self.data_path)
 
-        X, y = data_set_split(data_set)
+        X_columns, y_column, X, y = data_set_split(data_set)
 
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
         
-        return(self.X_train, self.X_test, self.y_train, self.y_test)
+        return(X_columns, y_column, self.X_train, self.X_test, self.y_train, self.y_test)
 
     def models_selector(self):
             """method to type best model for current problem from trained collection

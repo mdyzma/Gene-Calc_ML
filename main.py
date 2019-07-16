@@ -8,7 +8,7 @@ from Source.Models import Models
 
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
-val = 1
+val = 0
 
 if __name__ == "__main__":
 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     model_type=models[val])
     #TODO data input validation is needed
 
-    X_train, X_test, y_train, y_test = pre_model_creator.load_data()
+    X_columns, y_column, X_train, X_test, y_train, y_test = pre_model_creator.load_data()
     pre_model_creator.model_selection()
     
     #NOTE temporary solution, best model is selected by cross validation
@@ -29,15 +29,35 @@ if __name__ == "__main__":
 
     model_ready = Models(X_train, X_test, y_train, y_test)
     
-    if best_model == "Logistic regression":
-        model_ready.lr_classification(**hyperparameters)
+    if val == 0: #classifications models
 
-    elif best_model == "Ridge linear regression":
-        model_ready.ridge_regression(**hyperparameters)
+        if best_model == "Random forest classification":
+            model = model_ready.rf_classification(**hyperparameters)[0]
 
+        elif best_model == "KNN classification":
+            model = model_ready.knn_classification(**hyperparameters)[0]
+
+        elif best_model == "Logistic regression":
+            model = model_ready.lr_classification(**hyperparameters)[0]
+
+    elif val == 1: #regression models
+
+        if best_model == "Simple linear regression":
+            model = model_ready.linear_regression()
+
+        elif best_model == "lasso_regression":
+            model = model_ready.lasso_regression(**hyperparameters)[0]
         
+        elif best_model == "Ridge linear regression":
+            model = model_ready.ridge_regression(**hyperparameters)[0]
+
+        elif best_model == "random_forest_regression":
+            model = model_ready.random_forest_regression(**hyperparameters)[0]
+
+    print(X_columns)
+    model_ready.predict(model, y_column)
 
     #NOTE in this step user need to select the best model (from trained collection); based on: accuracy, 
-    #cross validation and other metrics
+    #NOTE cross validation and other metrics
     
     #NOTE only selected model will be proceed in next step (grid search)
