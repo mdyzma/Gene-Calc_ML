@@ -163,6 +163,8 @@ class Pre_model_constructor():
             "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
             "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
             "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")})
+
+        return self.models_accuracy
         
     def models_selector(self):
 

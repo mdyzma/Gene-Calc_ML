@@ -8,7 +8,7 @@ from Source.Models import Models
 
 models = ["classification", "regression"]
 sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
-val = 1
+val = 0
 
 if __name__ == "__main__":
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     #TODO data input validation is needed
 
     X_columns, y_column, X_train, X_test, y_train, y_test = pre_model_creator.load_data()
-    pre_model_creator.best_model_selection()
+    pre_model_creator.best_model_selection() #method return dict with accuracy scores for evry model
     
     #NOTE temporary solution, best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
@@ -25,8 +25,6 @@ if __name__ == "__main__":
     model_creator = Model_constructor(best_model, X_train, y_train)
     hyperparameters, gs_accuracy = model_creator.grid_search()
     
-    print(hyperparameters)
-
     model_ready = Models(X_train, X_test, y_train, y_test)
     
     if val == 0: #classifications models
