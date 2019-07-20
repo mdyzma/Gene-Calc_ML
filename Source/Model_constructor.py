@@ -54,7 +54,7 @@ class Model_constructor():
             k_values = list(filter(odd, range(50)))
 
             parameters = {"n_neighbors": k_values, "weights": ("uniform", "distance"), 
-            "algorithm": ("ball_tree", "kd_tree", "brute"), "p": [1, 2]}
+                            "algorithm": ("ball_tree", "kd_tree", "brute"), "p": [1, 2]}
             
             knn = KNeighborsClassifier()
             gs_knn = GridSearchCV(knn, parameters, cv=5)
@@ -70,7 +70,7 @@ class Model_constructor():
             
             c_range = list(arange(0.1, 1, 0.1))
             parameters = {"solver": ("newton-cg", "lbfgs", "sag", "saga", "liblinear"), 
-            "warm_start": ("True", "False"), "C": c_range}
+                            "warm_start": ("True", "False"), "C": c_range}
 
             lr = LogisticRegression(multi_class='auto')
             gs_lr = GridSearchCV(lr, parameters, cv=5)

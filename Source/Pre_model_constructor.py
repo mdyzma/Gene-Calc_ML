@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
-from .Models import Models
+from .models_collection import Models
 
 class Pre_model_constructor():    
     """
@@ -27,24 +27,35 @@ class Pre_model_constructor():
         self.models_accuracy = {}
         
     def load_data(self):
-       
         """
         Load data in csv, xls or xlsx format as data set for model training 
         and evaluation
         """
         
-        def data_type(path):
-
-            if path.endswith(".csv"):
+        def data_type(data):
+            if data.endswith(".csv"):
                 return "csv"
-            elif path.endswith(".xlsx") or path.endswith(".xls"):
+
+            elif data.endswith(".xlsx") or data.endswith(".xls"):
                 return "xlsx"
 
-        def data_set_split(data):
+        suffix = data_type(self.data_path)
+
+        if suffix == "csv":
+            data_set = pd.read_csv(self.data_path, delimiter=self.delimiter_type)
+       
+        elif suffix == "xlsx" or suffix == "xls":
+            data_set = pd.read_excel(self.data_path)
+        
+        return data_set
+
+
+    def data_set_split(self, data):
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
             Temporary solution is that last column in data set is always y-variable
+            return tuple: X_columns, y_column, self.X_train, self.X_test, self.y_train, self.y_test
             """
             col_names = data.columns
             dim = len(col_names)
@@ -54,22 +65,14 @@ class Pre_model_constructor():
             X = np.array(data[X_columns])
             y = np.array(data[y_column]).ravel()
 
-            return(X_columns, y_column, X, y)
-
-        suffix = data_type(path=self.data_path)
-    
-        if suffix == "csv":
-            data_set = pd.read_csv(self.data_path, delimiter=self.delimiter_type)
-       
-        elif suffix == "xlsx" or suffix == "xls":
-            data_set = pd.read_excel(self.data_path)
-
-        X_columns, y_column, X, y = data_set_split(data_set)
-
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
+            self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
-        
-        return(X_columns, y_column, self.X_train, self.X_test, self.y_train, self.y_test)
+
+            data_dict = {"X_array": X, "y_vector": y, "X_train": self.X_train, 
+                        "X_test": self.X_test, "y_train": self.y_train, "y_test": self.y_test}
+            
+            return(data_dict)
+
 
     def best_model_selection(self):
         """
@@ -172,7 +175,7 @@ class Pre_model_constructor():
         input is a dict with models accuracy scores [cross validation score]
         output is a model name with the best mean accuracy
         """
-        print(self.models_accuracy)
+                
         if self.model_type == "classification":
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
             
@@ -180,6 +183,7 @@ class Pre_model_constructor():
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
 
         print("Propably best model is: {}".format(best_model))
+        
         return best_model
 
         

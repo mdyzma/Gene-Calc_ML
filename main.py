@@ -1,6 +1,7 @@
-from Source.Pre_model_constructor import Pre_model_constructor
-from Source.Model_constructor import Model_constructor
-from Source.Models import Models
+from source.pre_model_constructor import Pre_model_constructor
+from source.model_constructor import Model_constructor
+from source.models_collection import Models
+#from source.validation import Validation
 
 #NOTE Type of model: regression or classification is selected by user
 #NOTE also data set used to training models.
@@ -13,10 +14,21 @@ val = 0
 if __name__ == "__main__":
 
     pre_model_creator = Pre_model_constructor(path=sets_paths[val], delimiter_type=",",
-    model_type=models[val])
-    #TODO data input validation is needed
+                                              model_type=models[val])
 
-    X_columns, y_column, X_train, X_test, y_train, y_test = pre_model_creator.load_data()
+    input_data = pre_model_creator.load_data()
+    data_dict = pre_model_creator.data_set_split(data=input_data)
+    
+    X_columns = data_dict.get("X_array")
+    y_column = data_dict.get("y_vector")
+
+    X_train = data_dict.get("X_train")
+    X_test = data_dict.get("X_test")
+    y_train = data_dict.get("y_train")
+    y_test = data_dict.get("y_test")
+
+    #TODO data input validation is needed
+    
     pre_model_creator.best_model_selection() #method return dict with accuracy scores for evry model
     
     #NOTE temporary solution, best model is selected by cross validation

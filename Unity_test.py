@@ -1,4 +1,4 @@
-from Source.Pre_model_constructor import Pre_model_constructor
+from source.pre_model_constructor import Pre_model_constructor
 import pytest
 
 models = ["classification", "regression"]
@@ -10,9 +10,14 @@ def test_instance_data_loading():
     
     for counter, mod in enumerate(models):
         
-        model = Pre_model_constructor(sets_paths[counter], ",", mod)
+        pre_model_creator = Pre_model_constructor(path=sets_paths[counter], delimiter_type=",", 
+                                      model_type=mod)
 
-        X_train, X_test, y_train, y_test = model.load_data()[2:]
+        input_data = pre_model_creator.load_data()
+        data_dict = pre_model_creator.data_set_split(data=input_data)
+
+        X_train = data_dict.get("X_train")
+        y_test = data_dict.get("y_test")
 
         if mod == "classification":
 
@@ -24,11 +29,15 @@ def test_instance_data_loading():
             assert X_train.shape == (3500, 5), "Data loading or pre-preparing failed"
             assert y_test.shape == (1500,), "Data loading or pre-preparing failed"
     
-def test_classification_methods():
+def test_models():
+    """test function to check models trainings"""
+
     for counter, mod in enumerate(models):
         
-        test_model = Pre_model_constructor(sets_paths[counter], ",", mod)
-        test_model.load_data()
+        test_model = Pre_model_constructor(path=sets_paths[counter], delimiter_type=",", 
+                                      model_type=mod)
+        input_data = test_model.load_data()
+        test_model.data_set_split(data=input_data)
 
         if mod == "classification":
             accuracy_dict = test_model.best_model_selection()
