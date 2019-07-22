@@ -7,6 +7,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import classification_report
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
+from sklearn.preprocessing import StandardScaler
 from .models_collection import Models
 
 class Pre_model_constructor():    
@@ -50,26 +51,40 @@ class Pre_model_constructor():
         return data_set
 
 
-    def data_set_split(self, data):
+    def data_set_split(self, data, normalization=False):
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
             Temporary solution is that last column in data set is always y-variable
-            return tuple: X_columns, y_column, self.X_train, self.X_test, self.y_train, self.y_test
+            return dict:{"X_array": X, "y_vector": y, "X_train": self.X_train, 
+                        "X_test": self.X_test, "y_train": self.y_train, "y_test": self.y_test}
             """
             col_names = data.columns
             dim = len(col_names)
             X_columns = col_names[:dim-1]
             y_column = col_names[-1]
-            
-            X = np.array(data[X_columns])
+
             y = np.array(data[y_column]).ravel()
+
+            #if True input data is normalized, optional
+            
+            if normalization == True: 
+                X_raw = np.array(data[X_columns])
+                scaler = StandardScaler()
+                X = scaler.transform(X_raw)
+                print("Standard scaler turned on")
+            
+            elif normalization == False:
+                X = np.array(data[X_columns])
+                print("Standard scaler turned off")
+
 
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
 
             data_dict = {"X_array": X, "y_vector": y, "X_train": self.X_train, 
-                        "X_test": self.X_test, "y_train": self.y_train, "y_test": self.y_test}
+                        "X_test": self.X_test, "y_train": self.y_train, "y_test": self.y_test,
+                        "X_names": X_columns, "y_name": y_column}
             
             return(data_dict)
 
@@ -175,7 +190,7 @@ class Pre_model_constructor():
         input is a dict with models accuracy scores [cross validation score]
         output is a model name with the best mean accuracy
         """
-                
+
         if self.model_type == "classification":
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
             

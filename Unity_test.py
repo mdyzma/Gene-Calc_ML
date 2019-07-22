@@ -2,7 +2,7 @@ from source.pre_model_constructor import Pre_model_constructor
 import pytest
 
 models = ["classification", "regression"]
-sets_paths = ["Data_set/Iris.csv", "Data_set/USA_Housing.csv"]
+sets_paths = ["data_sets/Iris.csv", "data_sets/USA_Housing.csv"]
 
 
 def test_instance_data_loading():

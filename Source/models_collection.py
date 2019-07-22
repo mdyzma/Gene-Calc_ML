@@ -7,7 +7,7 @@ from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
-
+import joblib
 import numpy as np
 
 #TODO add naive methods for accuracy comparison
@@ -61,11 +61,9 @@ class Models():
         return(knn, predicted)
     
     def lr_classification(self, max_iter=50,  C=1, solver="saga", 
-    warm_start=True, multi_class="auto", **kwargs):
-
+                          warm_start=True, multi_class="auto", **kwargs):
         """Logistic Regression Classifier"""
-        #TODO normalization
-        
+
         lr = LogisticRegression(solver=solver, max_iter=max_iter, C=C, 
         warm_start=warm_start, multi_class=multi_class)
 
@@ -110,9 +108,12 @@ class Models():
 
         return(rfr, predicted)
 
+    def export_model(self, model, model_name):
+            path = "ready_models/{}".format(model_name)
+            joblib.dump(model, path)
+
     def accuracy_test(self, gs_accuracy, predicted, val):
         """Method return accuracy for test data set [R2 in case of regression models]"""
-
         if val == 0:
             accuracy = accuracy_score(self.y_test, predicted)
         
@@ -122,11 +123,15 @@ class Models():
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
             .format(gs_accuracy, accuracy))
 
-    def predict(self, model, y_column):
+    def predict(self, model_name, y_column_name):
         """method to predict y values using best model with best hyperparameters"""
-
+        path = "ready_models/{}".format(model_name)
         input_values = input("Input X values: separated by commas => ").split(",")
         input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
+        
+        #TODO if normalization = True, input values also needs normalization
 
+        model = joblib.load(path)
+        print("model loaded")
         predicted_data = model.predict(input_values)
-        print("{} = {}".format(y_column, predicted_data))
+        print("{} = {}".format(y_column_name, predicted_data))

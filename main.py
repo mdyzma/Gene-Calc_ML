@@ -8,8 +8,8 @@ from source.models_collection import Models
 #NOTE Bellow is just a temporary solution for tests needs
 
 models = ["classification", "regression"]
-sets_paths = ["Data_set/iris.csv", "Data_set/USA_Housing.csv"]
-val = 0
+sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
+val = 1
 
 if __name__ == "__main__":
 
@@ -17,10 +17,10 @@ if __name__ == "__main__":
                                               model_type=models[val])
 
     input_data = pre_model_creator.load_data()
-    data_dict = pre_model_creator.data_set_split(data=input_data)
+    data_dict = pre_model_creator.data_set_split(data=input_data) #normalization deafult = False
     
     X_columns = data_dict.get("X_array")
-    y_column = data_dict.get("y_vector")
+    y_vector = data_dict.get("y_vector")
 
     X_train = data_dict.get("X_train")
     X_test = data_dict.get("X_test")
@@ -64,6 +64,7 @@ if __name__ == "__main__":
         elif best_model == "random_forest_regression":
             model, predicted = model_ready.random_forest_regression(**hyperparameters)
 
-    print(X_columns)
-    model_ready.predict(model, y_column)
     model_ready.accuracy_test(gs_accuracy, predicted, val)
+    model_ready.export_model(model, best_model)
+    print("Predictors", data_dict.get(X_names))
+    model_ready.predict(best_model, data_dict.get("y_name"))

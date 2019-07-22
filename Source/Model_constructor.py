@@ -152,7 +152,7 @@ class Model_constructor():
                hyperparameters, accuracy_gs = rg_regression_gs()
 
             return(hyperparameters, accuracy_gs)
-
+        
         hyperparameters, accuracy_gs = use_best_model()
         return(hyperparameters, accuracy_gs)
 
