@@ -1,5 +1,5 @@
 from source.pre_model_constructor import Pre_model_constructor
-from source.model_constructor import Model_constructor
+from source.model_optimizer import Model_optimizer
 from source.models_collection import Models
 #from source.validation import Validation
 
@@ -9,7 +9,10 @@ from source.models_collection import Models
 
 models = ["classification", "regression"]
 sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
-val = 1
+val = 0
+normalization = 1  # True or False
+
+#TODO supported vector machines modules needed
 
 if __name__ == "__main__":
 
@@ -17,7 +20,7 @@ if __name__ == "__main__":
                                               model_type=models[val])
 
     input_data = pre_model_creator.load_data()
-    data_dict = pre_model_creator.data_set_split(data=input_data) #normalization deafult = False
+    data_dict = pre_model_creator.data_set_split(data=input_data, normalization=normalization) #normalization deafult = False
     
     X_columns = data_dict.get("X_array")
     y_vector = data_dict.get("y_vector")
@@ -28,13 +31,12 @@ if __name__ == "__main__":
     y_test = data_dict.get("y_test")
 
     #TODO data input validation is needed
-    
     pre_model_creator.best_model_selection() #method return dict with accuracy scores for evry model
     
     #NOTE temporary solution, best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
 
-    model_creator = Model_constructor(best_model, X_train, y_train)
+    model_creator = Model_optimizer(best_model, X_train, y_train)
     hyperparameters, gs_accuracy = model_creator.grid_search()
     
     model_ready = Models(X_train, X_test, y_train, y_test)
@@ -66,5 +68,5 @@ if __name__ == "__main__":
 
     model_ready.accuracy_test(gs_accuracy, predicted, val)
     model_ready.export_model(model, best_model)
-    print("Predictors", data_dict.get(X_names))
-    model_ready.predict(best_model, data_dict.get("y_name"))
+    print("Predictors", data_dict.get("X_names"))
+    model_ready.predict(best_model, data_dict.get("y_name"), normalization=normalization)

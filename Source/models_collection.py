@@ -7,6 +7,7 @@ from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
+from sklearn.preprocessing import StandardScaler
 import joblib
 import numpy as np
 
@@ -123,13 +124,19 @@ class Models():
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
             .format(gs_accuracy, accuracy))
 
-    def predict(self, model_name, y_column_name):
+    def predict(self, model_name, y_column_name, normalization=False):
         """method to predict y values using best model with best hyperparameters"""
         path = "ready_models/{}".format(model_name)
         input_values = input("Input X values: separated by commas => ").split(",")
-        input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
         
-        #TODO if normalization = True, input values also needs normalization
+        if normalization == False:
+            input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
+        
+        elif normalization == True:
+            raw_input_values = np.array(input_values).reshape(1, -1).astype(np.float64)
+            scaler = StandardScaler()
+            scaler.fit(raw_input_values)
+            input_values = scaler.transform(raw_input_values)
 
         model = joblib.load(path)
         print("model loaded")

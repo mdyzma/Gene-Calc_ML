@@ -9,7 +9,8 @@ from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
 from numpy import arange
 
-class Model_constructor():
+class Model_optimizer():
+    """Class to construct models with best hyperparameters"""
     
     def __init__(self, best_model, X_train, y_train):        
         
@@ -69,10 +70,10 @@ class Model_constructor():
             """Search grid for logistic regression classification"""
             
             c_range = list(arange(0.1, 1, 0.1))
-            parameters = {"solver": ("newton-cg", "lbfgs", "sag", "saga", "liblinear"), 
-                            "warm_start": ("True", "False"), "C": c_range}
+            parameters = {"warm_start": ("True", "False"), "C": c_range}
 
-            lr = LogisticRegression(multi_class='auto')
+            lr = LogisticRegression(multi_class="auto", 
+                                    solver="lbfgs", verbose=0)
             gs_lr = GridSearchCV(lr, parameters, cv=5)
             gs_lr.fit(self.X_train, self.y_train)
 
@@ -154,6 +155,7 @@ class Model_constructor():
             return(hyperparameters, accuracy_gs)
         
         hyperparameters, accuracy_gs = use_best_model()
+        print("Hyperparameters for {} model: {}".format(self.selected_model, hyperparameters))
         return(hyperparameters, accuracy_gs)
 
 

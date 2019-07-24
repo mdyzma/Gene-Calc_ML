@@ -43,7 +43,7 @@ def test_models():
             accuracy_dict = test_model.best_model_selection()
             assert accuracy_dict.get("Random forest classification") == 0.9332467532467532,"Random forest classification model prediction failed"
             assert accuracy_dict.get("KNN") == 0.9232467532467533,"KNN classification model prediction failed"
-            assert accuracy_dict.get("Logistic regression") == 0.9609090909090909,"Logistic classification model prediction failed"
+            assert accuracy_dict.get("Logistic regression") == 0.9513852813852812,"Logistic classification model prediction failed"
         
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()

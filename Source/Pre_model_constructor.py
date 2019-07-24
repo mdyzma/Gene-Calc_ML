@@ -71,13 +71,13 @@ class Pre_model_constructor():
             if normalization == True: 
                 X_raw = np.array(data[X_columns])
                 scaler = StandardScaler()
+                scaler.fit(X_raw)
                 X = scaler.transform(X_raw)
                 print("Standard scaler turned on")
             
             elif normalization == False:
                 X = np.array(data[X_columns])
                 print("Standard scaler turned off")
-
 
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, y, test_size=0.30, random_state=101)
@@ -86,7 +86,7 @@ class Pre_model_constructor():
                         "X_test": self.X_test, "y_train": self.y_train, "y_test": self.y_test,
                         "X_names": X_columns, "y_name": y_column}
             
-            return(data_dict)
+            return data_dict
 
 
     def best_model_selection(self):
