@@ -29,21 +29,22 @@ def test_instance_data_loading():
             assert X_train.shape == (3500, 5), "Data loading or pre-preparing failed"
             assert y_test.shape == (1500,), "Data loading or pre-preparing failed"
     
-def test_models():
-    """test function to check models trainings"""
+def test_pre_models():
+    """test function to check pre_models"""
 
     for counter, mod in enumerate(models):
         
         test_model = Pre_model_constructor(path=sets_paths[counter], delimiter_type=",", 
-                                      model_type=mod)
+                                           model_type=mod)
         input_data = test_model.load_data()
-        test_model.data_set_split(data=input_data)
 
+        test_model.data_set_split(data=input_data)
+        print("Normalization turned off")
         if mod == "classification":
             accuracy_dict = test_model.best_model_selection()
             assert accuracy_dict.get("Random forest classification") == 0.9332467532467532,"Random forest classification model prediction failed"
             assert accuracy_dict.get("KNN") == 0.9232467532467533,"KNN classification model prediction failed"
-            assert accuracy_dict.get("Logistic regression") == 0.9513852813852812,"Logistic classification model prediction failed"
+            assert accuracy_dict.get("Logistic regression") == 0.9414285714285715,"Logistic classification model prediction failed"
         
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()
@@ -51,3 +52,20 @@ def test_models():
             assert accuracy_dict.get("Random forest regression") == 0.8801737815707658,"Random forest regression model prediction failed"
             assert accuracy_dict.get("Lasso linear regression") == 0.9173373065060977,"Lasso regression model prediction failed"
             assert accuracy_dict.get("Ridge linear regression") == 0.9173375618293227,"Ridge regression model prediction failed"
+
+        print("Normalization turned on")
+        test_model.data_set_split(data=input_data, normalization=True)
+
+        if mod == "classification":
+            accuracy_dict = test_model.best_model_selection()
+            assert accuracy_dict.get("Random forest classification") == 0.9332467532467532,"Normalization turned on, Random forest classification model prediction failed"
+            assert accuracy_dict.get("KNN") == 0.9323376623376625,"Normalization turned on, KNN classification model prediction failed"
+            assert accuracy_dict.get("Logistic regression") == 0.9414285714285715,"Normalization turned on, Logistic classification model prediction failed"
+        
+        elif mod == "regression":
+            accuracy_dict = test_model.best_model_selection()
+            assert accuracy_dict.get("Simple linear regression") == 0.9173373021738446,"Simple linear regression model prediction failed"
+            assert accuracy_dict.get("Random forest regression") == 0.8801773586462535,"Random forest regression model prediction failed"
+            assert accuracy_dict.get("Lasso linear regression") == 0.9173373053768076,"Lasso regression model prediction failed"
+            assert accuracy_dict.get("Ridge linear regression") == 0.9173376992610374,"Ridge regression model prediction failed"
+        

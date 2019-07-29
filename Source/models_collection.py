@@ -33,7 +33,6 @@ class Models():
     
     def knn_classification(self, n_neighbors=None, **kwargs):
         """K Neighbors Classifier"""
-        """TODO data normalization needed"""
 
         if n_neighbors == None:
             dict_of_results = {} # for k-n model
@@ -56,12 +55,10 @@ class Models():
             knn = KNeighborsClassifier(n_neighbors=n_neighbors)
             knn.fit(self.X_train, self.y_train)
             predicted = knn.predict(self.X_test)
-            accuracy = accuracy_score(self.y_test, predicted)
-
 
         return(knn, predicted)
     
-    def lr_classification(self, max_iter=50,  C=1, solver="saga", 
+    def lr_classification(self, max_iter=5000,  C=1, solver="saga", 
                           warm_start=True, multi_class="auto", **kwargs):
         """Logistic Regression Classifier"""
 

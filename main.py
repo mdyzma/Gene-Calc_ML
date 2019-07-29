@@ -9,10 +9,10 @@ from source.models_collection import Models
 
 models = ["classification", "regression"]
 sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
-val = 0
-normalization = 1  # True or False
+val = 1 #NOTE 1 for classification 2 for regression
+normalization = 1  #NOTE True or False
 
-#TODO supported vector machines modules needed
+#TODO supported vector machines modules
 
 if __name__ == "__main__":
 
@@ -22,8 +22,8 @@ if __name__ == "__main__":
     input_data = pre_model_creator.load_data()
     data_dict = pre_model_creator.data_set_split(data=input_data, normalization=normalization) #normalization deafult = False
     
-    X_columns = data_dict.get("X_array")
-    y_vector = data_dict.get("y_vector")
+    X_columns = data_dict.get("X_array") #NOTE for future input validation
+    y_vector = data_dict.get("y_vector") #NOTE for future input validation 
 
     X_train = data_dict.get("X_train")
     X_test = data_dict.get("X_test")
@@ -31,9 +31,9 @@ if __name__ == "__main__":
     y_test = data_dict.get("y_test")
 
     #TODO data input validation is needed
-    pre_model_creator.best_model_selection() #method return dict with accuracy scores for evry model
+    pre_model_creator.best_model_selection() #method obtain cross-val accuracy scores for every model
     
-    #NOTE temporary solution, best model is selected by cross validation
+    #NOTE best model is selected by cross validation
     best_model = pre_model_creator.models_selector() 
 
     model_creator = Model_optimizer(best_model, X_train, y_train)

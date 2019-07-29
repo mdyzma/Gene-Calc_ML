@@ -66,7 +66,7 @@ class Pre_model_constructor():
 
             y = np.array(data[y_column]).ravel()
 
-            #if True input data is normalized, optional
+            #NOTE if normalization == True input data is normalized, optional
             
             if normalization == True: 
                 X_raw = np.array(data[X_columns])
@@ -105,7 +105,7 @@ class Pre_model_constructor():
             Y_predicted = y_values predicted by mentioned model 
             """
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
-            self.y_train, cv=5)["test_score"])
+                                           self.y_train, cv=5)["test_score"])
 
             if self.model_type == "classification":
                 accuracy = accuracy_score(Y_true, Y_predicted)
@@ -136,7 +136,7 @@ class Pre_model_constructor():
 
                 print("{}, evaluation: {}".format(model_name, 
                 model_evaluation_metrics))
-                
+            
             return model_evaluation_metrics
 
         models = Models(self.X_train, self.X_test, self.y_train, self.y_test)
