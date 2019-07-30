@@ -23,7 +23,7 @@ class Models():
 
     #NOTE classification models bellow
 
-    def rf_classification(self, n_estimators=100, random_state=101, **kwargs):
+    def rf_classification(self, n_estimators=100, random_state=101, warm_start=False, **kwargs):
         """Random Forest Classifier"""
         rfc = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
         rfc.fit(self.X_train, self.y_train)

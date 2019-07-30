@@ -1,4 +1,5 @@
 from source.pre_model_constructor import Pre_model_constructor
+from source.model_optimizer import Model_optimizer
 import pytest
 
 models = ["classification", "regression"]
@@ -30,7 +31,7 @@ def test_instance_data_loading():
             assert y_test.shape == (1500,), "Data loading or pre-preparing failed"
     
 def test_pre_models():
-    """test function to check pre_models"""
+    """test function to check pre_models works"""
 
     for counter, mod in enumerate(models):
         
@@ -39,7 +40,7 @@ def test_pre_models():
         input_data = test_model.load_data()
 
         test_model.data_set_split(data=input_data)
-        print("Normalization turned off")
+        
         if mod == "classification":
             accuracy_dict = test_model.best_model_selection()
             assert accuracy_dict.get("Random forest classification") == 0.9332467532467532,"Random forest classification model prediction failed"
@@ -48,12 +49,19 @@ def test_pre_models():
         
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()
+
             assert accuracy_dict.get("Simple linear regression") == 0.9173373021738389,"Simple linear regression model prediction failed"
             assert accuracy_dict.get("Random forest regression") == 0.8801737815707658,"Random forest regression model prediction failed"
             assert accuracy_dict.get("Lasso linear regression") == 0.9173373065060977,"Lasso regression model prediction failed"
             assert accuracy_dict.get("Ridge linear regression") == 0.9173375618293227,"Ridge regression model prediction failed"
 
-        print("Normalization turned on")
+def test_pre_models_normalize():
+    """test function to check pre_models work (models traning on normalized data)"""
+    
+    for counter, mod in enumerate(models):
+        test_model = Pre_model_constructor(path=sets_paths[counter], delimiter_type=",", 
+                                            model_type=mod)
+        input_data = test_model.load_data()
         test_model.data_set_split(data=input_data, normalization=True)
 
         if mod == "classification":
@@ -64,8 +72,64 @@ def test_pre_models():
         
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()
-            assert accuracy_dict.get("Simple linear regression") == 0.9173373021738446,"Simple linear regression model prediction failed"
-            assert accuracy_dict.get("Random forest regression") == 0.8801773586462535,"Random forest regression model prediction failed"
-            assert accuracy_dict.get("Lasso linear regression") == 0.9173373053768076,"Lasso regression model prediction failed"
-            assert accuracy_dict.get("Ridge linear regression") == 0.9173376992610374,"Ridge regression model prediction failed"
-        
+            assert accuracy_dict.get("Simple linear regression") == 0.9173373021738446,"Normalization turned on, Simple linear regression model prediction failed"
+            assert accuracy_dict.get("Random forest regression") == 0.8801773586462535,"Normalization turned on, Random forest regression model prediction failed"
+            assert accuracy_dict.get("Lasso linear regression") == 0.9173373053768076,"Normalization turned on, Lasso regression model prediction failed"
+            assert accuracy_dict.get("Ridge linear regression") == 0.9173376992610374,"Normalization turned on, Ridge regression model prediction failed"
+
+def test_GridSearch_classification():
+    best_models = ["Random forest classification", "KNN classification", "Logistic regression"]
+    results = [0.9333333333333333, 0.9619047619047619, 0.9428571428571428]
+    results_normalized = [0.9333333333333333, 0.9523809523809523, 0.9428571428571428]
+
+    test_model = Pre_model_constructor(path="data_sets/Iris.csv", delimiter_type=",", 
+                                       model_type="classification")
+    input_data = test_model.load_data()
+    data_dict = test_model.data_set_split(data=input_data)
+    
+    X_train = data_dict.get("X_train")
+    y_train = data_dict.get("y_train")
+
+    for counter, model in enumerate(best_models):
+        grid_model = Model_optimizer(model, X_train, y_train)
+        accuracy = grid_model.grid_search()[1]
+        assert accuracy == results[counter],"Search grid PROPABLY does not work correctly for classification models"
+
+    data_dict = test_model.data_set_split(data=input_data, normalization=True)
+    X_train = data_dict.get("X_train")
+    y_train = data_dict.get("y_train")
+
+    for counter, model in enumerate(best_models):
+        grid_model = Model_optimizer(model, X_train, y_train)
+        accuracy = grid_model.grid_search()[1]
+        assert accuracy == results_normalized[counter],"Normalization turned on, Search grid PROPABLY does not work correctly for classification models"
+
+
+def test_GridSearch_regression():
+    best_models = ["Random forest regression", "Lasso linear regression", "Ridge linear regression"]
+    results = [0.8816816220718405, 0.9173374578616029, 0.917337540323215]
+    normalized_results = [0.881678557822236, 0.9173374578616029, 0.9173376711560439]
+
+    test_model = Pre_model_constructor(path="data_sets/USA_Housing.csv", delimiter_type=",", 
+                                       model_type="classification")
+    input_data = test_model.load_data()
+    data_dict = test_model.data_set_split(data=input_data)
+    
+    X_train = data_dict.get("X_train")
+    y_train = data_dict.get("y_train")
+
+    for counter, model in enumerate(best_models):
+        grid_model = Model_optimizer(model, X_train, y_train)
+        accuracy = grid_model.grid_search()[1]
+        assert accuracy == results[counter],"Search grid PROPABLY does not work correctly for regression models"
+
+         
+    data_dict = test_model.data_set_split(data=input_data, normalization=True)
+    
+    X_train = data_dict.get("X_train")
+    y_train = data_dict.get("y_train")
+    
+    for counter, model in enumerate(best_models):
+        grid_model = Model_optimizer(model, X_train, y_train)
+        accuracy = grid_model.grid_search()[1]
+        assert accuracy == normalized_results[counter],"Normalized turned on, Search grid PROPABLY does not work correctly for regression models"

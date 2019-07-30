@@ -20,7 +20,7 @@ class Model_optimizer():
 
     def grid_search(self):
 
-        """IN PRESS
+        """
         Method to build model using best alghoritms with best hyperparameters 
         [from Pre_model construcor class]
         
@@ -35,7 +35,7 @@ class Model_optimizer():
         """
         def rf_classification_gs():
             """Search grid for randof forest classification"""
-            parameters = {"n_estimators": [50, 500]}
+            parameters = {"n_estimators": [50, 500], "warm_start": ("True", "False")}
 
             rfc = RandomForestClassifier(random_state=101)
             gs_rfc = GridSearchCV(rfc, parameters, cv=5)
@@ -73,7 +73,7 @@ class Model_optimizer():
             parameters = {"warm_start": ("True", "False"), "C": c_range}
 
             lr = LogisticRegression(multi_class="auto", 
-                                    solver="lbfgs", verbose=0)
+                                    solver="lbfgs", max_iter=5000)
             gs_lr = GridSearchCV(lr, parameters, cv=5)
             gs_lr.fit(self.X_train, self.y_train)
 
@@ -83,13 +83,14 @@ class Model_optimizer():
             return(hyperparameters_res, accuracy_gs)
 
         #NOTE no search gird method for simple linear regression [no needed now]
+        #NOTE regression models bellow
 
         def rf_regression_gs():
             """Search grid for random foresr regression"""
 
-            parameters = {"n_estimators": [50, 500]}
+            parameters = {"n_estimators": [50, 500], "warm_start": ("True", "False")}
             
-            rf = RandomForestRegressor()
+            rf = RandomForestRegressor(random_state=101)
             gs_rf = GridSearchCV(rf, parameters, cv=5)
             gs_rf.fit(self.X_train, self.y_train)
 
