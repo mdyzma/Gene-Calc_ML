@@ -9,8 +9,8 @@ from source.models_collection import Models
 
 models = ["classification", "regression"]
 sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
-val = 1 #NOTE 1 for classification 2 for regression
-normalization = 1  #NOTE True or False
+val = 1 #NOTE 0 for classification 1 for regression
+normalization = 0  #NOTE True or False
 
 #TODO supported vector machines modules
 
@@ -52,6 +52,9 @@ if __name__ == "__main__":
         elif best_model == "Logistic regression":
             model, predicted = model_ready.lr_classification(**hyperparameters)
 
+        elif best_model == "Supported vector machines classification":
+            model, predicted = model_ready.svm_classification(**hyperparameters)
+
     elif val == 1: #regression models
 
         if best_model == "Simple linear regression":
@@ -66,7 +69,10 @@ if __name__ == "__main__":
         elif best_model == "random_forest_regression":
             model, predicted = model_ready.random_forest_regression(**hyperparameters)
 
+        elif best_model == "Supported vector machines regression":
+            model, predicted = model_ready.svm_regression(**hyperparameters)
+
     model_ready.accuracy_test(gs_accuracy, predicted, val)
-    model_ready.export_model(model, best_model)
-    print("Predictors", data_dict.get("X_names"))
-    model_ready.predict(best_model, data_dict.get("y_name"), normalization=normalization)
+    # model_ready.export_model(model, best_model)
+    # print("Predictors", data_dict.get("X_names"))
+    # model_ready.predict(best_model, data_dict.get("y_name"), normalization=normalization)

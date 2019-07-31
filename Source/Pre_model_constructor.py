@@ -154,10 +154,16 @@ class Pre_model_constructor():
             lr, predicted_lr = models.lr_classification()
             lr_model_evaluation_metrics = primary_model_evaluation(lr, 
             "Logistic regression classification", self.y_test, predicted_lr)
+
+            svm, predicted_svm = models.svm_classification()
+            svm_model_evaluation_metrics = primary_model_evaluation(svm, 
+            "Supported vector machines classification", self.y_test, predicted_svm)
             
             self.models_accuracy.update({"Random forest classification": rf_model_evaluation_metrics.get("cross validate score"), 
             "KNN": knn_model_evaluation_metrics.get("cross validate score"), 
-            "Logistic regression": lr_model_evaluation_metrics.get("cross validate score")})
+            "Logistic regression": lr_model_evaluation_metrics.get("cross validate score"),
+            "Supported vector machines classification": svm_model_evaluation_metrics.get("cross validate score")
+            })
                     
         elif self.model_type == "regression":
 
@@ -177,12 +183,19 @@ class Pre_model_constructor():
             ridge_model_evaluation_metrics = primary_model_evaluation(ridge, 
             "Ridge linear regression", self.y_test, predicted_ridge)
 
+            svm, predicted_svm = models.svm_regression()
+            svm_model_evaluation_metrics = primary_model_evaluation(svm, 
+            "Supported vector machines regression", self.y_test, predicted_svm)
+
+
             self.models_accuracy.update({"Simple linear regression": llinear_model_evaluation_metrics.get("cross validate score"), 
             "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
             "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
-            "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")})
-
-        return self.models_accuracy
+            "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score"),
+            "Supported vector machines regression": svm_model_evaluation_metrics.get("cross validate score")
+            })
+        
+        return self.models_accuracy #for test needs
         
     def models_selector(self):
 

@@ -6,6 +6,8 @@ models = ["classification", "regression"]
 sets_paths = ["data_sets/Iris.csv", "data_sets/USA_Housing.csv"]
 
 
+#TODO update for svm models !
+
 def test_instance_data_loading():
     "test function to check instance creation, data loading and sets splitting"
     

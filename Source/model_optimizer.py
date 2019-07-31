@@ -7,6 +7,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVR
+from sklearn.svm import SVC
 from numpy import arange
 
 class Model_optimizer():
@@ -40,6 +42,7 @@ class Model_optimizer():
             rfc = RandomForestClassifier(random_state=101)
             gs_rfc = GridSearchCV(rfc, parameters, cv=5)
             gs_rfc.fit(self.X_train, self.y_train)
+            
             hyperparameters_res = gs_rfc.best_params_
             accuracy_gs = gs_rfc.best_score_
 
@@ -82,8 +85,28 @@ class Model_optimizer():
 
             return(hyperparameters_res, accuracy_gs)
 
-        #NOTE no search gird method for simple linear regression [no needed now]
+        def svm_classification_gs():
+            """Grid Search for supported vector machines model"""
+
+            c_range = list(arange(0.1, 1, 0.1))
+            degree_range = range(1, 10)
+            
+            parameters = {"C": c_range, "kernel": ("linear", "poly", 
+            "rbf", "sigmoid"), "degree": degree_range}
+            svm_model = SVC(gamma="auto")
+
+            gs_svm = GridSearchCV(svm_model, parameters, cv=5)
+            gs_svm.fit(self.X_train, self.y_train)
+
+            hyperparameters_res = gs_svm.best_params_
+            accuracy_gs = gs_svm.best_score_
+
+            return(hyperparameters_res, accuracy_gs)
+
+
         #NOTE regression models bellow
+        #NOTE no search gird method for simple linear regression [no needed now]
+        
 
         def rf_regression_gs():
             """Search grid for random foresr regression"""
@@ -128,6 +151,24 @@ class Model_optimizer():
             accuracy_gs = gs_rg.best_score_
 
             return(hyperparameters_res, accuracy_gs)
+
+        def svm_regression_gs():
+            """Grid Search for supported vector machines model"""
+            #NOTE does not work correctly ! TO REVIEV
+            degree_range = range(1, 10)
+            c_range = list(arange(0.1, 1, 0.1))
+            
+            parameters = {"C": c_range, "kernel": ("linear", "poly", 
+            "rbf", "sigmoid"), "degree": degree_range}
+            
+            svm_model = SVR(gamma="auto")
+            gs_svm = GridSearchCV(svm_model, parameters, cv=5)
+            gs_svm.fit(self.X_train, self.y_train)
+
+            hyperparameters_res = gs_svm.best_params_
+            accuracy_gs = gs_svm.best_score_
+
+            return(hyperparameters_res, accuracy_gs)
         
         def use_best_model():
             hyperparameters, accuracy_gs = ["", ""]
@@ -141,6 +182,9 @@ class Model_optimizer():
             elif self.selected_model == "Logistic regression":
                 hyperparameters, accuracy_gs = lr_classification_gs()
 
+            elif self.selected_model == "Supported vector machines classification":
+                hyperparameters, accuracy_gs = svm_classification_gs()
+
             elif self.selected_model == "Simple linear regression":
                 print("Search grid for simple linear regression model no available")
 
@@ -152,6 +196,9 @@ class Model_optimizer():
 
             elif self.selected_model == "Ridge linear regression":
                hyperparameters, accuracy_gs = rg_regression_gs()
+
+            elif self.selected_model == "Supported vector machines regression":
+               hyperparameters, accuracy_gs = svm_regression_gs()
 
             return(hyperparameters, accuracy_gs)
         

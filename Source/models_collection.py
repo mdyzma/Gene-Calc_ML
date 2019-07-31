@@ -5,6 +5,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import Ridge
 from sklearn.linear_model import Lasso
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVR
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
@@ -70,6 +72,15 @@ class Models():
         
         return(lr, predicted)
 
+    def svm_classification(self, C=1.0, gamma="auto", kernel="rbf", degree=3, **kwargs):
+        """Supported vector machines classification"""
+        
+        svm_model = SVC(C=C, gamma=gamma, kernel=kernel, degree=degree)
+        svm_model.fit(self.X_train, self.y_train)
+        predicted = svm_model.predict(self.X_test)
+
+        return(svm_model, predicted)
+
     #NOTE regression models bellow
 
     def linear_regression(self):
@@ -77,6 +88,7 @@ class Models():
         Linear regression model for regression problems
         Ordinary least squares
         """
+        
         lreg = LinearRegression()
         lreg.fit(self.X_train, self.y_train)
         predicted = lreg.predict(self.X_test)
@@ -85,6 +97,7 @@ class Models():
 
     def lasso_regression(self, alpha=1.0, **kwargs):
         """Lasso regression model"""
+        
         lasso = Lasso(alpha=alpha)
         lasso.fit(self.X_train, self.y_train)
         predicted = lasso.predict(self.X_test)
@@ -93,6 +106,7 @@ class Models():
 
     def ridge_regression(self, alpha=1.0, **kwargs):
         """Ridge regression model"""
+        
         ridge = Ridge(alpha=alpha)
         ridge.fit(self.X_train, self.y_train)
         predicted = ridge.predict(self.X_test)
@@ -100,11 +114,23 @@ class Models():
         return(ridge, predicted)
 
     def random_forest_regression(self, random_state=101, n_estimators=100, **kwargs):
+        """Random forest regressor model"""
+        
         rfr = RandomForestRegressor(random_state=random_state, n_estimators=n_estimators)
         rfr.fit(self.X_train, self.y_train)
         predicted = rfr.predict(self.X_test)
 
         return(rfr, predicted)
+
+    def svm_regression(self, kernel="sigmoid", gamma="auto", C=1.0, epsilon=0.5, degree=3, **kwargs):
+        """Supported vector machines regression model"""
+        #NOTE does not work correctly ! TO REVIEV
+
+        svm_model = SVR(gamma=gamma, kernel=kernel, C=C, epsilon=epsilon, degree=degree)
+        svm_model.fit(self.X_train, self.y_train)
+        predicted = svm_model.predict(self.X_test)
+
+        return(svm_model, predicted)
 
     def export_model(self, model, model_name):
             path = "ready_models/{}".format(model_name)
@@ -112,6 +138,7 @@ class Models():
 
     def accuracy_test(self, gs_accuracy, predicted, val):
         """Method return accuracy for test data set [R2 in case of regression models]"""
+        
         if val == 0:
             accuracy = accuracy_score(self.y_test, predicted)
         
@@ -123,6 +150,7 @@ class Models():
 
     def predict(self, model_name, y_column_name, normalization=False):
         """method to predict y values using best model with best hyperparameters"""
+        
         path = "ready_models/{}".format(model_name)
         input_values = input("Input X values: separated by commas => ").split(",")
         
