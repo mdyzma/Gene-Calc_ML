@@ -60,7 +60,7 @@ class Models():
 
         return(knn, predicted)
     
-    def lr_classification(self, max_iter=5000,  C=1, solver="saga", 
+    def lr_classification(self, max_iter=50000,  C=1, solver="saga", 
                           warm_start=True, multi_class="auto", **kwargs):
         """Logistic Regression Classifier"""
 
@@ -121,16 +121,6 @@ class Models():
         predicted = rfr.predict(self.X_test)
 
         return(rfr, predicted)
-
-    def svm_regression(self, kernel="sigmoid", gamma="auto", C=1.0, epsilon=0.5, degree=3, **kwargs):
-        """Supported vector machines regression model"""
-        #NOTE does not work correctly ! TO REVIEV
-
-        svm_model = SVR(gamma=gamma, kernel=kernel, C=C, epsilon=epsilon, degree=degree)
-        svm_model.fit(self.X_train, self.y_train)
-        predicted = svm_model.predict(self.X_test)
-
-        return(svm_model, predicted)
 
     def export_model(self, model, model_name):
             path = "ready_models/{}".format(model_name)

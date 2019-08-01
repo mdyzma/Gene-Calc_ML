@@ -151,24 +151,6 @@ class Model_optimizer():
             accuracy_gs = gs_rg.best_score_
 
             return(hyperparameters_res, accuracy_gs)
-
-        def svm_regression_gs():
-            """Grid Search for supported vector machines model"""
-            #NOTE does not work correctly ! TO REVIEV
-            degree_range = range(1, 10)
-            c_range = list(arange(0.1, 1, 0.1))
-            
-            parameters = {"C": c_range, "kernel": ("linear", "poly", 
-            "rbf", "sigmoid"), "degree": degree_range}
-            
-            svm_model = SVR(gamma="auto")
-            gs_svm = GridSearchCV(svm_model, parameters, cv=5)
-            gs_svm.fit(self.X_train, self.y_train)
-
-            hyperparameters_res = gs_svm.best_params_
-            accuracy_gs = gs_svm.best_score_
-
-            return(hyperparameters_res, accuracy_gs)
         
         def use_best_model():
             hyperparameters, accuracy_gs = ["", ""]
@@ -196,9 +178,6 @@ class Model_optimizer():
 
             elif self.selected_model == "Ridge linear regression":
                hyperparameters, accuracy_gs = rg_regression_gs()
-
-            elif self.selected_model == "Supported vector machines regression":
-               hyperparameters, accuracy_gs = svm_regression_gs()
 
             return(hyperparameters, accuracy_gs)
         
