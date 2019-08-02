@@ -1,7 +1,7 @@
 from source.pre_model_constructor import Pre_model_constructor
 from source.model_optimizer import Model_optimizer
 from source.models_collection import Models
-#from source.validation import Validation
+from source.validation import Validation
 
 #NOTE Type of model: regression or classification is selected by user
 #NOTE also data set used to training models.
@@ -20,6 +20,10 @@ if __name__ == "__main__":
                                               model_type=models[val])
 
     input_data = pre_model_creator.load_data()
+
+    validation = Validation(in_data=input_data, model_type=models[val])
+    validation.data_val_1()
+
     data_dict = pre_model_creator.data_set_split(data=input_data, normalization=normalization) #normalization deafult = False
     
     X_columns = data_dict.get("X_array") #NOTE for future input validation

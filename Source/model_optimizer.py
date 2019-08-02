@@ -40,7 +40,7 @@ class Model_optimizer():
             parameters = {"n_estimators": [50, 500], "warm_start": ("True", "False")}
 
             rfc = RandomForestClassifier(random_state=101)
-            gs_rfc = GridSearchCV(rfc, parameters, cv=5)
+            gs_rfc = GridSearchCV(rfc, parameters, cv=5, iid=False)
             gs_rfc.fit(self.X_train, self.y_train)
             
             hyperparameters_res = gs_rfc.best_params_
@@ -61,7 +61,7 @@ class Model_optimizer():
                             "algorithm": ("ball_tree", "kd_tree", "brute"), "p": [1, 2]}
             
             knn = KNeighborsClassifier()
-            gs_knn = GridSearchCV(knn, parameters, cv=5)
+            gs_knn = GridSearchCV(knn, parameters, cv=5, iid=False)
             gs_knn.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_knn.best_params_
@@ -77,7 +77,7 @@ class Model_optimizer():
 
             lr = LogisticRegression(multi_class="auto", 
                                     solver="lbfgs", max_iter=5000)
-            gs_lr = GridSearchCV(lr, parameters, cv=5)
+            gs_lr = GridSearchCV(lr, parameters, cv=5, iid=False)
             gs_lr.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_lr.best_params_
@@ -95,7 +95,7 @@ class Model_optimizer():
             "rbf", "sigmoid"), "degree": degree_range}
             svm_model = SVC(gamma="auto")
 
-            gs_svm = GridSearchCV(svm_model, parameters, cv=5)
+            gs_svm = GridSearchCV(svm_model, parameters, cv=5, iid=False)
             gs_svm.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_svm.best_params_
@@ -114,7 +114,7 @@ class Model_optimizer():
             parameters = {"n_estimators": [50, 500], "warm_start": ("True", "False")}
             
             rf = RandomForestRegressor(random_state=101)
-            gs_rf = GridSearchCV(rf, parameters, cv=5)
+            gs_rf = GridSearchCV(rf, parameters, cv=5, iid=False)
             gs_rf.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_rf.best_params_
@@ -129,7 +129,7 @@ class Model_optimizer():
             parameters = {"alpha": a_range, "normalize": ("True", "False")}            
             
             lss = Lasso()
-            gs_lss = GridSearchCV(lss, parameters, cv=5)
+            gs_lss = GridSearchCV(lss, parameters, cv=5, iid=False)
             gs_lss.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_lss.best_params_
@@ -144,7 +144,7 @@ class Model_optimizer():
             parameters = {"alpha": a_range}
 
             rg = Ridge(solver="auto")
-            gs_rg = GridSearchCV(rg, parameters, cv=5)
+            gs_rg = GridSearchCV(rg, parameters, cv=5, iid=False)
             gs_rg.fit(self.X_train, self.y_train)
 
             hyperparameters_res = gs_rg.best_params_
