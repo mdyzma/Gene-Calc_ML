@@ -138,10 +138,11 @@ class Models():
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
             .format(gs_accuracy, accuracy))
 
-    def predict(self, model_name, y_column_name, normalization=False):
+    def predict(self, model_name, X_names, y_column_name, normalization=False):
         """method to predict y values using best model with best hyperparameters"""
         
         path = "ready_models/{}".format(model_name)
+        print("X variables : {}".format(X_names))
         input_values = input("Input X values: separated by commas => ").split(",")
         
         if normalization == False:

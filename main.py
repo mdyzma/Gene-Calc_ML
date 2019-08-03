@@ -9,7 +9,7 @@ from source.validation import Validation
 
 models = ["classification", "regression"]
 sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
-val = 0 #NOTE 0 for classification 1 for regression
+val = 1 #NOTE 0 for classification 1 for regression
 normalization = 0  #NOTE True or False
 
 #TODO supported vector machines modules
@@ -19,15 +19,15 @@ if __name__ == "__main__":
     pre_model_creator = Pre_model_constructor(path=sets_paths[val], delimiter_type=",",
                                               model_type=models[val])
 
-    input_data = pre_model_creator.load_data()
+    data_in = pre_model_creator.load_data()
+    X_array = data_in.get("X_array")
+    y_vector = data_in.get("y_vector")
 
-    validation = Validation(in_data=input_data, model_type=models[val])
-    validation.data_val_1()
+    validation = Validation(X=X_array, y=y_vector, model_type=models[val])
+    validation.shape_validation()
+    validation.data_quality()
 
-    data_dict = pre_model_creator.data_set_split(data=input_data, normalization=normalization) #normalization deafult = False
-    
-    X_columns = data_dict.get("X_array") #NOTE for future input validation
-    y_vector = data_dict.get("y_vector") #NOTE for future input validation 
+    data_dict = pre_model_creator.data_set_split(X=X_array, y=y_vector, normalization=normalization) #normalization deafult = False
 
     X_train = data_dict.get("X_train")
     X_test = data_dict.get("X_test")
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         elif best_model == "random_forest_regression":
             model, predicted = model_ready.random_forest_regression(**hyperparameters)
 
+
     model_ready.accuracy_test(gs_accuracy, predicted, val)
-    # model_ready.export_model(model, best_model)
-    # print("Predictors", data_dict.get("X_names"))
-    # model_ready.predict(best_model, data_dict.get("y_name"), normalization=normalization)
+    model_ready.export_model(model, best_model)
+    model_ready.predict(best_model, data_in.get("X_names"), data_in.get("y_name"), normalization=normalization)
