@@ -8,8 +8,8 @@ from source.validation import Validation
 #NOTE Bellow is just a temporary solution for tests needs
 
 models = ["classification", "regression"]
-sets_paths = ["data_sets/iris.csv", "data_sets/USA_Housing.csv"]
-val = 1 #NOTE 0 for classification 1 for regression
+sets_paths = ["data_sets/Iris.csv", "data_sets/USA_Housing.csv"]
+val = 0 #NOTE 0 for classification 1 for regression
 normalization = 0  #NOTE True or False
 
 #TODO supported vector machines modules
@@ -26,7 +26,8 @@ if __name__ == "__main__":
     validation = Validation(X=X_array, y=y_vector, model_type=models[val])
     validation.shape_validation()
     validation.data_quality()
-
+    validation.data_NaN()
+    
     data_dict = pre_model_creator.data_set_split(X=X_array, y=y_vector, normalization=normalization) #normalization deafult = False
 
     X_train = data_dict.get("X_train")
@@ -76,4 +77,4 @@ if __name__ == "__main__":
 
     model_ready.accuracy_test(gs_accuracy, predicted, val)
     model_ready.export_model(model, best_model)
-    model_ready.predict(best_model, data_in.get("X_names"), data_in.get("y_name"), normalization=normalization)
+    #model_ready.predict(best_model, data_in.get("X_names"), data_in.get("y_name"), normalization=normalization)

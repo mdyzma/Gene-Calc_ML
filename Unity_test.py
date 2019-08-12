@@ -8,6 +8,8 @@ sets_paths = ["data_sets/Iris.csv", "data_sets/USA_Housing.csv"]
 
 #TODO update for svm models !
 
+#TODO function to test validation method from Validation class 
+
 def test_instance_data_loading():
     "test function to check instance creation, data loading and sets splitting"
     
@@ -59,10 +61,10 @@ def test_pre_models():
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()
 
-            assert accuracy_dict.get("Simple linear regression") == 0.9173373021738389,"Simple linear regression model prediction failed"
-            assert accuracy_dict.get("Random forest regression") == 0.8801737815707658,"Random forest regression model prediction failed"
-            assert accuracy_dict.get("Lasso linear regression") == 0.9173373065060977,"Lasso regression model prediction failed"
-            assert accuracy_dict.get("Ridge linear regression") == 0.9173375618293227,"Ridge regression model prediction failed"
+            assert accuracy_dict.get("Simple linear regression") == 0.9168489817090973,"Simple linear regression model prediction failed"
+            assert accuracy_dict.get("Random forest regression") == 0.8794821066207236,"Random forest regression model prediction failed"
+            assert accuracy_dict.get("Lasso linear regression") == 0.9168489860285964,"Lasso regression model prediction failed"
+            assert accuracy_dict.get("Ridge linear regression") == 0.9168492456702015,"Ridge regression model prediction failed"
 
 def test_pre_models_normalize():
     """test function to check pre_models work (models traning on normalized data)"""
@@ -85,15 +87,18 @@ def test_pre_models_normalize():
         
         elif mod == "regression":
             accuracy_dict = test_model.best_model_selection()
-            assert accuracy_dict.get("Simple linear regression") == 0.9173373021738446,"Normalization turned on, Simple linear regression model prediction failed"
-            assert accuracy_dict.get("Random forest regression") == 0.8801773586462535,"Normalization turned on, Random forest regression model prediction failed"
-            assert accuracy_dict.get("Lasso linear regression") == 0.9173373053768076,"Normalization turned on, Lasso regression model prediction failed"
-            assert accuracy_dict.get("Ridge linear regression") == 0.9173376992610374,"Normalization turned on, Ridge regression model prediction failed"
+            assert accuracy_dict.get("Simple linear regression") == 0.9168489817090959,"Normalization turned on, Simple linear regression model prediction failed"
+            assert accuracy_dict.get("Random forest regression") == 0.8794843416507467,"Normalization turned on, Random forest regression model prediction failed"
+            assert accuracy_dict.get("Lasso linear regression") == 0.9168489847392213,"Normalization turned on, Lasso regression model prediction failed"
+            assert accuracy_dict.get("Ridge linear regression") == 0.9168494020921008,"Normalization turned on, Ridge regression model prediction failed"
 
 def test_GridSearch_classification():
+    """function to test Grid Search for classification models with 
+    raw and normalized data #NOTE VERY SLOW"""
+    
     best_models = ["Random forest classification", "KNN classification", "Logistic regression"]
-    results = [0.9333333333333333, 0.9619047619047619, 0.9428571428571428]
-    results_normalized = [0.9333333333333333, 0.9523809523809523, 0.9428571428571428]
+    results = [0.9332467532467532, 0.9614285714285714, 0.9414285714285715]
+    results_normalized = [0.9332467532467532, 0.9514285714285714, 0.9414285714285715]
 
     test_model = Pre_model_constructor(path="data_sets/Iris.csv", delimiter_type=",", 
                                        model_type="classification")
@@ -123,9 +128,12 @@ def test_GridSearch_classification():
         assert accuracy == results_normalized[counter],"Normalization turned on, Search grid PROPABLY does not work correctly for classification models"
 
 def test_GridSearch_regression():
+    """Function to test Grid Search for regression models with 
+    raw and normalized data #NOTE VERY VERY SLOW"""
+    
     best_models = ["Random forest regression", "Lasso linear regression", "Ridge linear regression"]
-    results = [0.8816816220718404, 0.917337457861603, 0.917337540323215]
-    normalized_results = [0.881678557822236, 0.9173374578616029, 0.9173376711560439]
+    results = [0.8811994374499792, 0.9168491434818741, 0.9168492237328291]
+    normalized_results = [0.8811962679449141, 0.9168491434818741, 0.9168493716508754]
 
     test_model = Pre_model_constructor(path="data_sets/USA_Housing.csv", delimiter_type=",", 
                                        model_type="classification")
