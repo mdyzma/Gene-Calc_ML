@@ -35,7 +35,6 @@ if __name__ == "__main__":
     y_train = data_dict.get("y_train")
     y_test = data_dict.get("y_test")
 
-    #TODO data input validation is needed
     pre_model_creator.best_model_selection() #method obtain cross-val accuracy scores for every model
     
     #NOTE best model is selected by cross validation
@@ -77,4 +76,4 @@ if __name__ == "__main__":
 
     model_ready.accuracy_test(gs_accuracy, predicted, val)
     model_ready.export_model(model, best_model)
-    #model_ready.predict(best_model, data_in.get("X_names"), data_in.get("y_name"), normalization=normalization)
+    model_ready.predict(best_model, data_in.get("X_names"), data_in.get("y_name"), normalization=normalization)

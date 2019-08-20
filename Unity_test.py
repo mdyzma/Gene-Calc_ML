@@ -5,7 +5,6 @@ import pytest
 models = ["classification", "regression"]
 sets_paths = ["data_sets/Iris.csv", "data_sets/USA_Housing.csv"]
 
-
 #TODO update for svm models !
 
 #TODO function to test validation method from Validation class 
