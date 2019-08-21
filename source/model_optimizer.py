@@ -14,11 +14,12 @@ from numpy import arange
 class Model_optimizer():
     """Class to construct models with best hyperparameters"""
     
-    def __init__(self, best_model, X_train, y_train):        
+    def __init__(self, best_model, X_train, y_train, models_id):        
         
         self.selected_model = best_model
         self.X_train = X_train
         self.y_train = y_train
+        self.models_id = models_id
 
     def grid_search(self):
         """
@@ -158,34 +159,37 @@ class Model_optimizer():
             
             hyperparameters, accuracy_gs = ["", ""]
             
-            if self.selected_model == "Random forest classification":
+            if self.selected_model == 1: #"Random forest classification"
                 hyperparameters, accuracy_gs = rf_classification_gs()
 
-            elif self.selected_model == "KNN classification":
+            elif self.selected_model == 2: #"KNN classification"
                 hyperparameters, accuracy_gs = knn_classification_gs()
 
-            elif self.selected_model == "Logistic regression":
+            elif self.selected_model == 3: #"Logistic regression"
                 hyperparameters, accuracy_gs = lr_classification_gs()
 
-            elif self.selected_model == "Supported vector machines classification":
+            elif self.selected_model == 4: #"Supported vector machines classification"
                 hyperparameters, accuracy_gs = svm_classification_gs()
 
-            elif self.selected_model == "Simple linear regression":
+            elif self.selected_model == 5: #"Simple linear regression"
                 print("Search grid for simple linear regression model no available")
 
-            elif self.selected_model == "Random forest regression":
-                hyperparameters, accuracy_gs = rf_regression_gs()
-
-            elif self.selected_model == "Lasso linear regression":
+            elif self.selected_model == 6: #"Lasso linear regression"
                 hyperparameters, accuracy_gs = lss_regression_gs()
 
-            elif self.selected_model == "Ridge linear regression":
+            elif self.selected_model == 7: #"Ridge linear regression"
                hyperparameters, accuracy_gs = rg_regression_gs()
+
+            elif self.selected_model == 8: #"Random forest regression
+                hyperparameters, accuracy_gs = rf_regression_gs()
 
             return(hyperparameters, accuracy_gs)
         
         hyperparameters, accuracy_gs = use_best_model()
-        print("Hyperparameters for {} model: {}".format(self.selected_model, hyperparameters))
+        
+        print("Hyperparameters for {} model: {}".format(self.models_id.get(self.selected_model), 
+              hyperparameters))
+        
         return(hyperparameters, accuracy_gs)
 
 
