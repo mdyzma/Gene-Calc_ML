@@ -20,12 +20,13 @@ class Pre_model_constructor():
     model type = classification or regression
     """
 
-    def __init__(self, path, delimiter_type, model_type):
+    def __init__(self, path, delimiter_type, model_type, models_id):
         
         self.data_path = path
         self.delimiter_type = delimiter_type
         self.model_type = model_type
         self.models_accuracy = {}
+        self.models_id = models_id
         
     def load_data(self):
         """
@@ -53,16 +54,15 @@ class Pre_model_constructor():
         X_columns = col_names[:dim-1]
         y_column = col_names[-1]
         
-        X_array = np.array(data_set[X_columns])
-        y_vector = np.array(data_set[y_column]).ravel()
+        self.X_array = np.array(data_set[X_columns])
+        self.y_vector = np.array(data_set[y_column]).ravel()
         
-        data_in = {"X_array": X_array, "y_vector": y_vector, 
-                   "X_names": X_columns, "y_name": y_column
-                   }
+        data_in = {"X_names": X_columns, "y_name": y_column,
+                   "X_array": self.X_array, "y_vector": self.y_vector}
 
         return data_in
 
-    def data_set_split(self, X, y, normalization=False):
+    def data_set_split(self,normalization=False):
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
@@ -75,15 +75,16 @@ class Pre_model_constructor():
             
             if normalization == True: 
                 scaler = StandardScaler()
-                scaler.fit(X)
-                X = scaler.transform(X)
+                scaler.fit(self.X_array)
+                X = scaler.transform(self.X_array)
                 print("Standard scaler turned on")
             
             elif normalization == False:
+                X = self.X_array
                 print("Standard scaler turned off")
 
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            X, y, test_size=0.30, random_state=101)
+            X, self.y_vector, test_size=0.30, random_state=101)
 
             data_dict = {"X_train": self.X_train, "X_test": self.X_test, 
                          "y_train": self.y_train, "y_test": self.y_test,
@@ -122,7 +123,7 @@ class Pre_model_constructor():
                     "accuracy": accuracy
                     }
 
-                print("{}, evaluation: {}".format(model_name, 
+                print("{}\n evaluation: {}".format(model_name, 
                 model_evaluation_metrics))
 
             elif self.model_type == "regression":
@@ -136,8 +137,9 @@ class Pre_model_constructor():
                     "MSE": mse,
                     "R2": r2
                     }
+                
 
-                print("{}, evaluation: {}".format(model_name, 
+                print("{}\n evaluation: {}".format(model_name, 
                 model_evaluation_metrics))
             
             return model_evaluation_metrics
@@ -162,21 +164,18 @@ class Pre_model_constructor():
             svm_model_evaluation_metrics = primary_model_evaluation(svm, 
             "Supported vector machines classification", self.y_test, predicted_svm)
             
-            self.models_accuracy.update({"Random forest classification": rf_model_evaluation_metrics.get("cross validate score"), 
-            "KNN": knn_model_evaluation_metrics.get("cross validate score"), 
-            "Logistic regression": lr_model_evaluation_metrics.get("cross validate score"),
-            "Supported vector machines classification": svm_model_evaluation_metrics.get("cross validate score")
+            self.models_accuracy.update({
+            1: rf_model_evaluation_metrics.get("cross validate score"), 
+            2: knn_model_evaluation_metrics.get("cross validate score"), 
+            3: lr_model_evaluation_metrics.get("cross validate score"),
+            4: svm_model_evaluation_metrics.get("cross validate score")
             })
                     
         elif self.model_type == "regression":
 
             lreg, predicted_linear = models.linear_regression()
-            llinear_model_evaluation_metrics = primary_model_evaluation(lreg, 
+            linear_model_evaluation_metrics = primary_model_evaluation(lreg, 
             "Simple linear regression", self.y_test, predicted_linear)
-
-            rfr, predicted_rf = models.random_forest_regression()
-            rf_model_evaluation_metrics = primary_model_evaluation(rfr, 
-            "Random forest regression", self.y_test, predicted_rf)
             
             lasso, predicted_lasso = models.lasso_regression()
             lasso_model_evaluation_metrics = primary_model_evaluation(lasso, 
@@ -186,14 +185,18 @@ class Pre_model_constructor():
             ridge_model_evaluation_metrics = primary_model_evaluation(ridge, 
             "Ridge linear regression", self.y_test, predicted_ridge)
 
+            rfr, predicted_rf = models.random_forest_regression()
+            rf_model_evaluation_metrics = primary_model_evaluation(rfr, 
+            "Random forest regression", self.y_test, predicted_rf)
 
-            self.models_accuracy.update({"Simple linear regression": llinear_model_evaluation_metrics.get("cross validate score"), 
-            "Random forest regression": rf_model_evaluation_metrics.get("cross validate score"), 
-            "Lasso linear regression": lasso_model_evaluation_metrics.get("cross validate score"),
-            "Ridge linear regression": ridge_model_evaluation_metrics.get("cross validate score")
+            self.models_accuracy.update({
+            5: linear_model_evaluation_metrics.get("cross validate score"),
+            6: lasso_model_evaluation_metrics.get("cross validate score"),
+            7: ridge_model_evaluation_metrics.get("cross validate score"),
+            8: rf_model_evaluation_metrics.get("cross validate score")
             })
         
-        return self.models_accuracy #for test needs
+        return self.models_accuracy #for tests needs
         
     def models_selector(self):
 
@@ -208,7 +211,7 @@ class Pre_model_constructor():
         elif self.model_type == "regression":
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
 
-        print("Propably best model is: {}".format(best_model))
+        print("Propably best model is: {}".format(self.models_id.get(best_model)))
         
         return best_model
 
