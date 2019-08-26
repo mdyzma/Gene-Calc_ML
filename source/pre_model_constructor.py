@@ -9,8 +9,10 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
 from .models_collection import Models
+import click
 
 class Pre_model_constructor():    
+    
     """
     class with methods to: load and check data, select regression or classyfication model
     based off accuracy.
@@ -29,6 +31,7 @@ class Pre_model_constructor():
         self.models_id = models_id
         
     def load_data(self):
+        
         """
         Load data in csv, xls or xlsx format as data set for model training 
         and evaluation
@@ -63,6 +66,7 @@ class Pre_model_constructor():
         return data_in
 
     def data_set_split(self, normalization):
+            
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
@@ -78,13 +82,17 @@ class Pre_model_constructor():
                 scaler.fit(self.X_array)
                 X = scaler.transform(self.X_array)
                 
-                mean_array = scaler.mean_
+                mean_array = scaler.mean_ #data used for scaling user input
                 std_array = scaler.scale_
                 print("Standard scaler turned on")
             
             elif normalization == False:
                 X = self.X_array
+                mean_array = None
+                std_array = None
                 print("Standard scaler turned off")
+
+            print("*"*80)
 
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
             X, self.y_vector, test_size=0.30, random_state=101)
@@ -96,6 +104,7 @@ class Pre_model_constructor():
             return data_dict
 
     def best_model_selection(self):
+        
         """
         Method to select accurate model for regression or calssification problem based 
         off accuracy and cross validation.
@@ -104,12 +113,14 @@ class Pre_model_constructor():
         """
 
         def primary_model_evaluation(model, model_name, Y_true, Y_predicted):
+            
             """method to basic evaluation of models collection
             model = instance of model
             model_name = name of algorithm
             Y_true = y_test values
             Y_predicted = y_values predicted by mentioned model 
             """
+            
             cross_validate_score = np.mean(cross_validate(model, self.X_train, 
                                            self.y_train, cv=5)["test_score"])
 
@@ -125,9 +136,11 @@ class Pre_model_constructor():
                     "accuracy": accuracy
                     }
 
-                print("{}\n evaluation: {}".format(model_name, 
-                model_evaluation_metrics))
-
+                click.echo(click.style("{}", fg="black", bg="white").format(model_name))
+                print('Cross validation score {}'.format(model_evaluation_metrics.get("cross validate score")))
+                print('Accuracy {}'.format(model_evaluation_metrics.get("accuracy")))
+                print('Confusion matrix\n{}\n'.format(model_evaluation_metrics.get("matrix_report")))
+            
             elif self.model_type == "regression":
                 mae = mean_absolute_error(Y_true, Y_predicted)
                 mse = mean_squared_error(Y_true, Y_predicted)
@@ -140,9 +153,9 @@ class Pre_model_constructor():
                     "R2": r2
                     }
                 
-
-                print("{}\n evaluation: {}".format(model_name, 
-                model_evaluation_metrics))
+                click.echo(click.style("{}", fg="black", bg="white").format(model_name))
+                print('Cross validate score {}'.format(model_evaluation_metrics.get("cross validate score")))
+                print('MAE: {}, MSE: {}, R2: {}\n'.format(model_evaluation_metrics.get("MAE"), model_evaluation_metrics.get("MSE"), model_evaluation_metrics.get("R2")))
             
             return model_evaluation_metrics
 
@@ -213,8 +226,7 @@ class Pre_model_constructor():
         elif self.model_type == "regression":
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
 
-        print("Propably best model is: {}".format(self.models_id.get(best_model)))
-        
+        click.echo(click.style("Propably best model is: {}", fg="black", bg="white").format(self.models_id.get(best_model)))
         return best_model
 
         

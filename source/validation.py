@@ -15,7 +15,6 @@ class Validation():
 
         assert X_shape[1] < 10, "More then allowed predictors !"
         assert y_shape[0] < 10000, "More then allowed records !"
-        print("Input shape is accurate")
 
     def data_NaN(self):
         """Method to find NaN"""
@@ -63,10 +62,10 @@ class Validation():
         mean_list = np.mean(X_array, axis=0)
 
         for counter, in_values in enumerate(input_predict):
-            if in_values < (mean_list[counter] - (4 * (std_list[counter]))):
+            if in_values < (mean_list[counter] - (3 * (std_list[counter]))):
                 print("Risk of extrapolation {} value is smaller than 3 std from mean!". format(X_names[counter]))
             
-            elif in_values > (mean_list[counter] + (4 * (std_list[counter]))):
+            elif in_values > (mean_list[counter] + (3 * (std_list[counter]))):
                 print("Risk of extrapolation {} value is bigger than 3 std from mean!". format(X_names[counter]))
     
             

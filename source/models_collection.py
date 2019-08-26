@@ -135,15 +135,17 @@ class Models():
         elif model_type == "regression":
             accuracy = r2_score(self.y_test, predicted)
 
-        print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
-            .format(gs_accuracy, accuracy))
+        print("*"*80)
+        print("Cross validation [based on train set] = {}\nFinall accuracy [on test set] = {}"
+              .format(gs_accuracy, accuracy))
 
     def predict(self, model_name, X_names, y_column_name, normalization, model_path="ready_models", mean_array=None, std_array=None):
         """method to predict y values using best model with best hyperparameters"""
         
         path = "{}/{}".format(model_path, model_name)
-        print("X variables : {}".format(X_names))
-        input_values = input("Input X values: separated by commas => ").split(",")
+        print("*"*80)
+        print("Predictors : {}".format(X_names))
+        input_values = input("Input predictors: separated by commas => ").split(",")
         
         if normalization == False:
             input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
