@@ -48,6 +48,35 @@ class Validation():
             except ValueError:
                 print("Data in y_vector must be numerical")
                 exit()
+
+    def extrapolation_risk(X_array, input_predict, X_names):
+        n_columns = X_array.shape[1]
+        
+        try:
+            input_predict = np.reshape(input_predict, (n_columns, 1))
+        
+        except ValueError:
+            print("Number of inputs different from number of predictors!")
+            exit()
+
+        std_list = np.std(X_array, axis=0)
+        mean_list = np.mean(X_array, axis=0)
+
+        for counter, in_values in enumerate(input_predict):
+            if in_values < (mean_list[counter] - (4 * (std_list[counter]))):
+                print("Risk of extrapolation {} value is smaller than 3 std from mean!". format(X_names[counter]))
+            
+            elif in_values > (mean_list[counter] + (4 * (std_list[counter]))):
+                print("Risk of extrapolation {} value is bigger than 3 std from mean!". format(X_names[counter]))
+    
+            
+        
+
+
+
+
+        
+
             
         
         
