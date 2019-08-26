@@ -51,18 +51,18 @@ class Pre_model_constructor():
         
         col_names = data_set.columns
         dim = len(col_names)
+
         X_columns = col_names[:dim-1]
         y_column = col_names[-1]
-        
+
         self.X_array = np.array(data_set[X_columns])
         self.y_vector = np.array(data_set[y_column]).ravel()
-        
         data_in = {"X_names": X_columns, "y_name": y_column,
                    "X_array": self.X_array, "y_vector": self.y_vector}
 
         return data_in
 
-    def data_set_split(self,normalization=False):
+    def data_set_split(self, normalization=False):
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
@@ -71,7 +71,7 @@ class Pre_model_constructor():
             "y_train": self.y_train, "y_test": self.y_test}
             """
 
-            #NOTE if normalization == True input data is normalized, optional
+            #NOTE if normalization == True input data is normalized, [optional]
             
             if normalization == True: 
                 scaler = StandardScaler()
@@ -91,7 +91,6 @@ class Pre_model_constructor():
                          }
             
             return data_dict
-
 
     def best_model_selection(self):
         """
