@@ -62,7 +62,7 @@ class Pre_model_constructor():
 
         return data_in
 
-    def data_set_split(self, normalization=False):
+    def data_set_split(self, normalization):
             """
             User need to determine what are X varaibles and y in input data set
             bellow is just temporary.
@@ -77,6 +77,9 @@ class Pre_model_constructor():
                 scaler = StandardScaler()
                 scaler.fit(self.X_array)
                 X = scaler.transform(self.X_array)
+                
+                mean_array = scaler.mean_
+                std_array = scaler.scale_
                 print("Standard scaler turned on")
             
             elif normalization == False:
@@ -88,7 +91,7 @@ class Pre_model_constructor():
 
             data_dict = {"X_train": self.X_train, "X_test": self.X_test, 
                          "y_train": self.y_train, "y_test": self.y_test,
-                         }
+                         "X_mean": mean_array, "X_std": std_array}
             
             return data_dict
 
