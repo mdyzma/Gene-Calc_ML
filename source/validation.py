@@ -15,7 +15,7 @@ class Validation():
 
         assert X_shape[1] < 10, "More then allowed predictors !"
         assert y_shape[0] < 10000, "More then allowed records !"
-        print("In data shape is accurate")
+        print("Input shape is accurate")
 
     def data_NaN(self):
         """Method to find NaN"""
