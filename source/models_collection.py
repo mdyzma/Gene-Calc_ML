@@ -168,6 +168,5 @@ class Models():
         Validation.extrapolation_risk(self.X_train, input_values, X_names)
 
         model = joblib.load(path)
-        print("Model loaded")
         predicted_data = model.predict(input_values)
-        print("{} = {}".format(y_column_name, predicted_data))
+        print("\n{} = {}".format(y_column_name, predicted_data))
