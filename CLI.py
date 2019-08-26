@@ -6,7 +6,6 @@ import click
 
 #NOTE Type of model: regression or classification is selected by user
 #NOTE also data set used to training models.
-#NOTE Bellow is just a temporary solution for tests needs
 
 def welcome():
     click.echo(click.style('APMC - Automatic Predictive Model Constructor v. 1.0', blink=False, bold=True))
