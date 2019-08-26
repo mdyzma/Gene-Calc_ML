@@ -1,7 +1,0 @@
-[
-  "Unity_test.py::test_instance_data_loading",
-  "Unity_test.py::test_pre_models",
-  "Unity_test.py::test_pre_models_normalize",
-  "Unity_test.py::test_GridSearch_classification",
-  "Unity_test.py::test_GridSearch_regression"
-]
