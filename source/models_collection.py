@@ -122,8 +122,8 @@ class Models():
 
         return(rfr, predicted)
 
-    def export_model(self, model, model_name, model_out):
-        path = "{}/{}".format(model_out, model_name)
+    def export_model(self, model, model_name, model_path="ready_models"):
+        path = "{}/{}".format(model_path, model_name)
         joblib.dump(model, path)
 
     def accuracy_test(self, gs_accuracy, predicted, model_type):
@@ -138,10 +138,10 @@ class Models():
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
             .format(gs_accuracy, accuracy))
 
-    def predict(self, model_name, X_names, y_column_name, normalization=False):
+    def predict(self, model_name, X_names, y_column_name, normalization=False, model_path="ready_models"):
         """method to predict y values using best model with best hyperparameters"""
         
-        path = "ready_models/{}".format(model_name)
+        path = "{}/{}".format(model_path, model_name)
         print("X variables : {}".format(X_names))
         input_values = input("Input X values: separated by commas => ").split(",")
         
