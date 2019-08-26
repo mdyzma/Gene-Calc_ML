@@ -25,7 +25,9 @@ def print_help(ctx, param, value):
 
 @click.option("--model-type", "-m", "model_type", type=click.Choice(["classification", "regression"], case_sensitive=False), help="Select type of model [REQUIRED]")
 
-@click.option("--model-out", "-o", "model_out", type=click.Path(), default="ready_models", help="Path to export trained model, deafult is in dir 'ready_models/*' [OPTIONAL]")
+@click.option("--project-name", "-p", "project_name", default="Project", type=str,  help="Project name [in case of export model is a file name] [OPTIONAL]")
+
+@click.option("--model-out", "-o", "model_out", type=click.Path(), default=None, help="Path to export trained model for future predictions [OPTIONAL]")
 
 @click.option("--normalization", "-n", "normalization", is_flag=True, default=False, help="Normalize input data, default is False [OPTIONAL]")
 
@@ -40,7 +42,8 @@ def print_help(ctx, param, value):
  )
 
 @click.pass_context
-def construction_procedure(ctx, data_input, model_type, model_out, normalization, delimiter):
+def construction_procedure(ctx, data_input, model_type, project_name, model_out, normalization, delimiter):
+    print("{}\n".format(project_name))
 
     models_id = {1: "Random forest classification", 2: "KNN classification", 
              3: "Logistic regression", 4: "Supported vector machines classification", 
@@ -73,7 +76,30 @@ def construction_procedure(ctx, data_input, model_type, model_out, normalization
     pre_model_creator.best_model_selection() #method obtain cross-val accuracy scores for every model
     
     #NOTE best model is selected by cross validation
-    best_model = pre_model_creator.models_selector() 
+    pre_model_creator.models_selector()
+
+
+    if model_type == "classification":
+        
+        print("""
+                 1: Random forest classification
+                 2: KNN classification
+                 3: Logistic regression
+                 4: Supported vector machines classification
+        """)
+    
+    elif model_type == "regression":
+
+        print("""
+                 5: Simple linear regression
+                 6: Lasso linear regression
+                 7: Ridge linear regression
+                 8: Random forest regression
+        """)
+
+    best_model = click.prompt('Please enter the number of chosen model', type=int)
+    click.echo(click.style('Be patient this step may take some time ...', blink=True))
+    
 
     model_creator = Model_optimizer(best_model, X_train, y_train, models_id)
     hyperparameters, gs_accuracy = model_creator.grid_search()
@@ -110,12 +136,13 @@ def construction_procedure(ctx, data_input, model_type, model_out, normalization
 
 
     model_ready.accuracy_test(gs_accuracy, predicted, model_type)
-    model_ready.export_model(model, models_id.get(best_model), model_out)
     
-    model_ready.predict(models_id.get(best_model), data_in.get("X_names"), 
+    if model_out is not None:
+        model_ready.export_model(model, model_out, project_name)
+    
+    model_ready.predict(model, models_id.get(best_model), data_in.get("X_names"), 
                         data_in.get("y_name"), 
                         normalization=normalization, 
-                        model_path=model_out,
                         mean_array=data_dict.get("X_mean"),
                         std_array=data_dict.get("X_std")
                         )
