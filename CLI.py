@@ -112,7 +112,14 @@ def construction_procedure(ctx, data_input, model_type, model_out, normalization
 
     model_ready.accuracy_test(gs_accuracy, predicted, model_type)
     model_ready.export_model(model, models_id.get(best_model), model_out)
-    model_ready.predict(models_id.get(best_model), data_in.get("X_names"), data_in.get("y_name"), normalization=normalization, model_path=model_out)
+    
+    model_ready.predict(models_id.get(best_model), data_in.get("X_names"), 
+                        data_in.get("y_name"), 
+                        normalization=normalization, 
+                        model_path=model_out,
+                        mean_array=data_dict.get("X_mean"),
+                        std_array=data_dict.get("X_std")
+                        )
 
 if __name__ == "__main__":
     welcome()
