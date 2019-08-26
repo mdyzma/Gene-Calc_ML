@@ -169,4 +169,4 @@ class Models():
 
         model = joblib.load(path)
         predicted_data = model.predict(input_values)
-        print("\n{} = {}".format(y_column_name, predicted_data))
+        print("\nPredcited {} = {}".format(y_column_name, predicted_data))

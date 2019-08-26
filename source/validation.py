@@ -63,10 +63,10 @@ class Validation():
 
         for counter, in_values in enumerate(input_predict):
             if in_values < (mean_list[counter] - (3 * (std_list[counter]))):
-                print("Risk of extrapolation {} value is smaller than 3 std from mean!". format(X_names[counter]))
+                print("Risk of extrapolation predictor [{}] value is SMALLER than 3 std from mean!". format(X_names[counter]))
             
             elif in_values > (mean_list[counter] + (3 * (std_list[counter]))):
-                print("Risk of extrapolation {} value is bigger than 3 std from mean!". format(X_names[counter]))
+                print("Risk of extrapolation predictor [{}] value is BIGGER than 3 std from mean!". format(X_names[counter]))
     
             
         
