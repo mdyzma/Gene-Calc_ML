@@ -122,8 +122,8 @@ class Models():
 
         return(rfr, predicted)
 
-    def export_model(self, model, model_name, model_path="ready_models"):
-        path = "{}/{}".format(model_path, model_name)
+    def export_model(self, model, model_path, project_name):
+        path = "{}/{}".format(model_path, project_name)
         joblib.dump(model, path)
 
     def accuracy_test(self, gs_accuracy, predicted, model_type):
@@ -134,15 +134,15 @@ class Models():
         
         elif model_type == "regression":
             accuracy = r2_score(self.y_test, predicted)
+            #TODO more metrics after Search Grid
 
         print("*"*80)
-        print("Cross validation [based on train set] = {}\nFinall accuracy [on test set] = {}"
+        print("Cross validation [based on train set after SearchGrid] = {}\nFinall accuracy [on test set] = {}"
               .format(gs_accuracy, accuracy))
 
-    def predict(self, model_name, X_names, y_column_name, normalization, model_path="ready_models", mean_array=None, std_array=None):
+    def predict(self, model, best_model, X_names, y_column_name, normalization, mean_array=None, std_array=None):
         """method to predict y values using best model with best hyperparameters"""
         
-        path = "{}/{}".format(model_path, model_name)
         print("*"*80)
         print("Predictors : {}".format(X_names))
         input_values = input("Input predictors: separated by commas => ").split(",")
@@ -167,6 +167,5 @@ class Models():
 
         Validation.extrapolation_risk(self.X_train, input_values, X_names)
 
-        model = joblib.load(path)
-        predicted_data = model.predict(input_values)
-        print("\nPredcited {} = {}".format(y_column_name, predicted_data))
+        predicted_data = str(model.predict(input_values))
+        print("\nPredcited {} by {} model = {}".format(y_column_name, best_model, predicted_data))
