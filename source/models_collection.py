@@ -9,7 +9,7 @@ from sklearn.svm import SVR
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
-from sklearn.preprocessing import StandardScaler
+from .validation import Validation
 import joblib
 import numpy as np
 
@@ -138,7 +138,7 @@ class Models():
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
             .format(gs_accuracy, accuracy))
 
-    def predict(self, model_name, X_names, y_column_name, normalization=False, model_path="ready_models"):
+    def predict(self, model_name, X_names, y_column_name, normalization, model_path="ready_models", mean_array=None, std_array=None):
         """method to predict y values using best model with best hyperparameters"""
         
         path = "{}/{}".format(model_path, model_name)
@@ -149,10 +149,21 @@ class Models():
             input_values = np.array(input_values).reshape(1, -1).astype(np.float64) #pretyping to float64 needed
         
         elif normalization == True:
-            raw_input_values = np.array(input_values).reshape(1, -1).astype(np.float64)
-            scaler = StandardScaler()
-            scaler.fit(raw_input_values)
-            input_values = scaler.transform(raw_input_values)
+            scaled_val = []
+            for counter, inputs in enumerate(input_values):
+                inputs = float(inputs)
+                
+                try:
+                    scaled_inputs = (inputs - mean_array[counter]) / std_array[counter] #self made standard scaler
+                except ValueError:
+                    print("Propably std is equal to 0! Zero division error!")
+                    exit()
+                    
+                scaled_val.append(scaled_inputs)
+
+            input_values = np.array(scaled_val).reshape(1, -1).astype(np.float64)
+
+        Validation.extrapolation_risk(self.X_train, input_values, X_names)
 
         model = joblib.load(path)
         print("Model loaded")
