@@ -122,17 +122,17 @@ class Models():
 
         return(rfr, predicted)
 
-    def export_model(self, model, model_name):
-        path = "ready_models/{}".format(model_name)
+    def export_model(self, model, model_name, model_out):
+        path = "{}/{}".format(model_out, model_name)
         joblib.dump(model, path)
 
-    def accuracy_test(self, gs_accuracy, predicted, val):
+    def accuracy_test(self, gs_accuracy, predicted, model_type):
         """Method return accuracy for test data set [R2 in case of regression models]"""
         
-        if val == 0:
+        if model_type == "classification":
             accuracy = accuracy_score(self.y_test, predicted)
         
-        elif val == 1:
+        elif model_type == "regression":
             accuracy = r2_score(self.y_test, predicted)
 
         print("Cross validation [on train set] = {}\nFinall accuracy on test set = {}"
@@ -155,6 +155,6 @@ class Models():
             input_values = scaler.transform(raw_input_values)
 
         model = joblib.load(path)
-        print("model loaded")
+        print("Model loaded")
         predicted_data = model.predict(input_values)
         print("{} = {}".format(y_column_name, predicted_data))
