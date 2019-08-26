@@ -226,7 +226,7 @@ class Pre_model_constructor():
         elif self.model_type == "regression":
             best_model = max(self.models_accuracy, key=self.models_accuracy.get)
 
-        click.echo(click.style("Propably best model is: {}", fg="black", bg="white").format(self.models_id.get(best_model)))
+        click.echo(click.style("Based on metrics, propably best model is: {}", fg="black", bg="white").format(self.models_id.get(best_model)))
         return best_model
 
         
