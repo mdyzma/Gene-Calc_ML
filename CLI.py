@@ -30,7 +30,7 @@ def print_help(ctx, param, value):
 
 @click.option("--model-out", "-o", "model_out", type=click.Path(), default=None, help="Path to export trained model for future predictions [OPTIONAL]")
 
-@click.option("--stat-report", "-r", "stat_report", type=click.Path(), default=False, help="Path to export statistical report about input-data, if None report will not rise, deafult is False [OPTIONAL]")
+@click.option("--stat-report", "-r", "stat_report", type=click.Path(), default=None, help="Path to export statistical report about input-data, if None report will not rise, deafult is False [OPTIONAL]")
 
 @click.option("--normalization", "-n", "normalization", is_flag=True, default=False, help="Normalize input data, default is False [OPTIONAL]")
 
