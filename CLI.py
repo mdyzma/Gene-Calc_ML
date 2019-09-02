@@ -2,6 +2,7 @@ from source.pre_model_constructor import Pre_model_constructor
 from source.model_optimizer import Model_optimizer
 from source.models_collection import Models
 from source.validation import Validation
+from source.stat_report import Report_generator
 import click 
 
 #NOTE Type of model: regression or classification is selected by user
@@ -29,6 +30,8 @@ def print_help(ctx, param, value):
 
 @click.option("--model-out", "-o", "model_out", type=click.Path(), default=None, help="Path to export trained model for future predictions [OPTIONAL]")
 
+@click.option("--stat-report", "-r", "stat_report", type=click.Path(), default=False, help="Path to export statistical report about input-data, if None report will not rise, deafult is False [OPTIONAL]")
+
 @click.option("--normalization", "-n", "normalization", is_flag=True, default=False, help="Normalize input data, default is False [OPTIONAL]")
 
 @click.option("--delimiter", "-d", type=str, default=",", help=" Select type of delimiter in case of *.csv files, default is ',' [OPTIONAL]")
@@ -42,7 +45,7 @@ def print_help(ctx, param, value):
  )
 
 @click.pass_context
-def construction_procedure(ctx, data_input, model_type, project_name, model_out, normalization, delimiter):
+def construction_procedure(ctx, data_input, model_type, project_name, model_out, stat_report, normalization, delimiter):
     print("{}\n".format(project_name))
 
     models_id = {1: "Random forest classification", 2: "KNN classification", 
@@ -82,19 +85,19 @@ def construction_procedure(ctx, data_input, model_type, project_name, model_out,
     if model_type == "classification":
         
         print("""
-                 1: Random forest classification
-                 2: KNN classification
-                 3: Logistic regression
-                 4: Supported vector machines classification
+            1: Random forest classification
+            2: KNN classification
+            3: Logistic regression
+            4: Supported vector machines classification
         """)
     
     elif model_type == "regression":
 
         print("""
-                 5: Simple linear regression
-                 6: Lasso linear regression
-                 7: Ridge linear regression
-                 8: Random forest regression
+            5: Simple linear regression
+            6: Lasso linear regression
+            7: Ridge linear regression
+            8: Random forest regression
         """)
 
     best_model = click.prompt('Please enter the number of chosen model', type=int)
@@ -139,6 +142,12 @@ def construction_procedure(ctx, data_input, model_type, project_name, model_out,
     
     if model_out is not None:
         model_ready.export_model(model, model_out, project_name)
+
+    if stat_report is not None:
+        report = Report_generator(stat_report, data_input, model_type, best_model, project_name)
+        report.prepare_data()
+        report.desc_stat()
+        report.plot()
     
     model_ready.predict(model, models_id.get(best_model), data_in.get("X_names"), 
                         data_in.get("y_name"), 
