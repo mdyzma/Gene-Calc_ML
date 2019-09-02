@@ -9,7 +9,11 @@ from sklearn.svm import SVR
 from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
 from .validation import Validation
+import pandas as pd
 import joblib
 import numpy as np
 
@@ -129,14 +133,20 @@ class Models():
     def accuracy_test(self, gs_accuracy, predicted, model_type):
         """Method return accuracy for test data set [R2 in case of regression models]"""
         
+        print("*"*80)
+
         if model_type == "classification":
             accuracy = accuracy_score(self.y_test, predicted)
-        
+            matrix_report = classification_report(self.y_test, predicted, output_dict=True)    
+            df_matrix_report = pd.DataFrame(matrix_report)
+            print("Confusion matrix\n{}".format(df_matrix_report))
+
         elif model_type == "regression":
             accuracy = r2_score(self.y_test, predicted)
-            #TODO more metrics after Search Grid
+            mae = mean_absolute_error(self.y_test, predicted)
+            mse = mean_squared_error(self.y_test, predicted)
+            print("MAE: {}\nMSE: {}".format(mae, mse))
 
-        print("*"*80)
         print("Cross validation [based on train set after SearchGrid] = {}\nFinall accuracy [on test set] = {}"
               .format(gs_accuracy, accuracy))
 
