@@ -120,7 +120,7 @@ class Models():
     def random_forest_regression(self, random_state=101, n_estimators=100, **kwargs):
         """Random forest regressor model"""
         
-        rfr = RandomForestRegressor(random_state=random_state, n_estimators=n_estimators)
+        rfr = RandomForestRegressor(random_state=random_state, n_estimators=n_estimators, max_depth=10, max_leaf_nodes=20)
         rfr.fit(self.X_train, self.y_train)
         predicted = rfr.predict(self.X_test)
 
