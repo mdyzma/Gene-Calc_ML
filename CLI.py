@@ -100,7 +100,11 @@ def construction_procedure(ctx, data_input, model_type, project_name, model_out,
             8: Random forest regression
         """)
 
-    best_model = click.prompt('Please enter the number of chosen model', type=int)
+    if model_type == "classification":
+        best_model = click.prompt('Please enter the number of chosen model', type=int)
+    elif model_type == "regression":
+        best_model = click.prompt('Please enter the number of chosen model', type=int)
+    
     click.echo(click.style('Be patient this step may take some time ...', blink=True))
     
 
@@ -144,9 +148,11 @@ def construction_procedure(ctx, data_input, model_type, project_name, model_out,
         model_ready.export_model(model, model_out, project_name)
 
     if stat_report is not None:
-        report = Report_generator(stat_report, data_input, model_type, best_model, project_name)
+        report = Report_generator(best_model, stat_report, data_input, 
+                                model_type, model, project_name)
         report.prepare_data()
         report.desc_stat()
+        report.get_model_data()
         report.plot()
     
     model_ready.predict(model, models_id.get(best_model), data_in.get("X_names"), 
