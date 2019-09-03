@@ -46,6 +46,7 @@ MANIFEST
 
 #Report
 Report/
+*.gv
 
 # PyInstaller
 *.manifest
