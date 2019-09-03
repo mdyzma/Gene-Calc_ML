@@ -44,6 +44,9 @@ share/python-wheels/
 MANIFEST
 *.idea
 
+#Report
+Report/
+
 # PyInstaller
 *.manifest
 *.spec
